@@ -1,0 +1,1 @@
+﻿// React app entry - renders App into #root

@@ -1,0 +1,1 @@
+﻿// Authenticated layout: Navbar + Outlet
