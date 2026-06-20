@@ -1,0 +1,17 @@
+.match-simulator {
+  background: #090d16;
+}
+
+.log-container {
+  scrollbar-width: thin;
+  scrollbar-color: #1e294b #05070a;
+}
+
+@keyframes slide-in-from-left-2 {
+  from { transform: translateX(-8px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.slide-in-from-left-2 {
+  animation-name: slide-in-from-left-2;
+}

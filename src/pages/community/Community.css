@@ -1,0 +1,84 @@
+/* Community Feed Styles - Lumina Cyber Aesthetic */
+@reference "../../index.css";
+
+:root {
+    --community-bg: #10131b;
+    --community-surface: rgba(28, 28, 30, 0.4);
+    --community-accent: #adc6ff;
+    --community-text: #e0e2ed;
+    --community-text-variant: #c1c6d7;
+}
+
+.community-page {
+    background-color: var(--community-bg);
+    color: var(--community-text);
+}
+
+.glass-panel {
+    background: var(--community-surface);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #414755;
+    border-radius: 10px;
+}
+
+.bezier-transition {
+    transition: all 0.6s cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Specific component styles */
+.composer-textarea {
+    @apply w-full bg-transparent border-none focus:ring-0 resize-none font-sans text-base h-12 pt-2;
+    color: var(--color-on-surface);
+}
+
+.composer-textarea::placeholder {
+    color: color-mix(in srgb, var(--color-on-surface-variant) 40%, transparent);
+}
+
+.post-card {
+    background: var(--community-surface);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    @apply rounded-2xl overflow-hidden;
+    transition: all 0.6s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.post-card:hover {
+    @apply -translate-y-0.5 shadow-2xl;
+}
+
+.badge-level {
+    @apply px-2 py-0.5 bg-indigo-500/20 text-indigo-400 text-[10px] font-mono rounded uppercase;
+}
+
+.badge-champion {
+    @apply px-2 py-0.5 bg-orange-500/20 text-orange-400 text-[10px] font-mono rounded uppercase;
+}
+
+.battle-victory-card {
+    position: relative;
+    background: linear-gradient(to bottom right, #1c2028, #10131b);
+    @apply p-8 rounded-2xl border border-white/5 overflow-hidden;
+}
+
+/* Animations */
+@keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+    animation: spin-slow 12s linear infinite;
+}

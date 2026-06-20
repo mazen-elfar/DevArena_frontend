@@ -1,0 +1,23 @@
+.upgrade-modal {
+  background: #090d16;
+}
+
+.plan-card {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+.plan-card.popular {
+  box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.2);
+}
+
+.popular-badge {
+  letter-spacing: 0.1em;
+}
+
+.select-button {
+  cursor: pointer;
+}
+
+.footer-stats p {
+  letter-spacing: 0.05em;
+}

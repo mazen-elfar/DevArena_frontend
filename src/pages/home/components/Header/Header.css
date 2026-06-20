@@ -1,0 +1,215 @@
+.search-input {
+  width: 100%;
+  padding: 6px 16px 6px 40px;
+  font-size: 12px;
+  background: #0b0f19;
+  border: 1px solid rgba(30, 41, 75, 0.4);
+  border-radius: 12px;
+  color: #d1d5db;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.6);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1);
+}
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 9999px;
+  padding: 4px 12px;
+  border: 1px solid transparent;
+  user-select: none;
+}
+
+.status-pill.blue {
+  background: #0d1527;
+  border-color: rgba(30, 41, 75, 0.4);
+}
+
+.status-pill.orange {
+  background: #171216;
+  border-color: rgba(124, 45, 18, 0.4);
+}
+
+.status-pill .value {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: monospace;
+}
+
+.status-pill.blue .value { color: #93c5fd; }
+.status-pill.orange .value { color: #fb923c; }
+
+.header-action-button {
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(30, 41, 75, 0.3);
+  color: #94a3b8;
+  background: transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.header-action-button:hover {
+  color: #ffffff;
+}
+
+.header-action-button.active {
+  background: rgba(30, 41, 75, 0.4);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #60a5fa;
+}
+
+.header-action-button.active-indigo {
+  background: rgba(30, 41, 75, 0.4);
+  border-color: rgba(99, 102, 241, 0.3);
+  color: #818cf8;
+}
+
+.notification-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  animation: bounce 1s infinite;
+}
+
+.notification-dot.red { background: #ef4444; }
+.notification-dot.indigo { background: #6366f1; }
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  margin-top: 14px;
+  width: 320px;
+  background: #0d1222;
+  border: 1px solid rgba(30, 41, 75, 0.6);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  padding: 16px;
+  z-index: 40;
+}
+
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(30, 41, 75, 0.2);
+  padding-bottom: 8px;
+}
+
+.dropdown-header h3 {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dropdown-link {
+  font-size: 10px;
+  font-weight: 600;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-link:hover { text-decoration: underline; }
+.dropdown-link.blue { color: #60a5fa; }
+.dropdown-link.indigo { color: #818cf8; }
+
+.dropdown-list {
+  list-style: none;
+  max-height: 256px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.dropdown-item {
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  border: 1px solid transparent;
+  margin-bottom: 8px;
+}
+
+.dropdown-item.highlight {
+  background: rgba(30, 58, 138, 0.2);
+  border-color: rgba(59, 130, 246, 0.1);
+}
+
+.dropdown-item.highlight-indigo {
+  background: rgba(49, 46, 129, 0.2);
+  border-color: rgba(99, 102, 241, 0.1);
+}
+
+.dropdown-item.muted { color: #94a3b8; }
+
+.dropdown-item .timestamp {
+  font-size: 10px;
+  color: #6b7280;
+  font-family: monospace;
+  margin-top: 4px;
+  display: block;
+}
+
+.avatar-small {
+  width: 28px;
+  height: 28px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #818cf8;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.btn-primary {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 16px;
+  background: linear-gradient(to right, #2563eb, #4f46e5, #4338ca);
+  color: #ffffff;
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(to right, #3b82f6, #4f46e5);
+}
+
+.btn-secondary {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 16px;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}

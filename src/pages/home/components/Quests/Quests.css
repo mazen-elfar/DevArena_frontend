@@ -1,0 +1,87 @@
+.quest-card {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+}
+
+.view-all-link {
+  font-size: 10px;
+  font-weight: 700;
+  color: #60a5fa;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.view-all-link:hover { text-decoration: underline; }
+
+.quest-item {
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(30, 41, 75, 0.4);
+  background: #0b0f19;
+  transition: all 0.3s ease;
+}
+
+.quest-item.completed {
+  background: rgba(6, 78, 59, 0.1);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.quest-item .title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.quest-item .desc {
+  font-size: 9px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.quest-item .reward {
+  font-size: 9px;
+  font-weight: 700;
+  color: #818cf8;
+  font-family: monospace;
+}
+
+.prog-label { color: #6b7280; }
+
+.prog-bar-bg {
+  height: 4px;
+  width: 100%;
+  background: #111827;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.prog-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #6366f1);
+  border-radius: 9999px;
+}
+
+.claim-button {
+  width: 100%;
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #a5b4fc;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(49, 46, 129, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.claim-button:hover {
+  background: #4f46e5;
+  color: #ffffff;
+}

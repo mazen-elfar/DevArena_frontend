@@ -1,0 +1,48 @@
+.leaderboard-card {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+}
+
+.user-item {
+  border: 1px solid transparent;
+}
+
+.user-item.self {
+  background: rgba(30, 58, 138, 0.15);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.user-item.others:hover {
+  background: rgba(15, 23, 42, 0.4);
+  border-color: rgba(30, 41, 75, 0.3);
+}
+
+.rank-container {
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rank-number {
+  letter-spacing: 0.05em;
+}
+
+.full-link {
+  width: 100%;
+  margin-top: 16px;
+  padding: 10px;
+  background: #0d1222;
+  border: 1px solid rgba(30, 41, 75, 0.4);
+  border-radius: 12px;
+  font-size: 9px;
+  font-weight: 800;
+  color: #6b7280;
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.full-link:hover {
+  color: #ffffff;
+  border-color: rgba(59, 130, 246, 0.2);
+}

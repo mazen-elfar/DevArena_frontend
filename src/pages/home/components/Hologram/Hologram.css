@@ -1,0 +1,70 @@
+.hologram-container {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 1);
+}
+
+.grid-overlay {
+  background-image: 
+    linear-gradient(rgba(18, 24, 48, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(18, 24, 48, 0.15) 1px, transparent 1px);
+  background-size: 16px 16px;
+  opacity: 0.7;
+}
+
+.core-wrapper .glow-effect {
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(99, 102, 241, 0.1) 40%, rgba(168, 85, 247, 0.15) 100%);
+  filter: blur(24px);
+}
+
+.hologram-container:hover .glow-effect {
+  background-color: rgba(79, 70, 229, 0.2);
+}
+
+.tag-badge {
+  background: rgba(2, 6, 23, 0.8);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: monospace;
+  letter-spacing: 0.1em;
+  color: #22d3ee;
+}
+
+.info-panel-left .status-active {
+  color: #60a5fa;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.info-panel-left .status-label {
+  font-size: 10px;
+  color: #6b7280;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.info-panel-left .id-label {
+  font-size: 9px;
+  color: #4b5563;
+}
+
+.info-panel-right .panel-title {
+  font-size: 10px;
+  color: #818cf8;
+  font-weight: 600;
+}
+
+.info-panel-right .panel-value {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.info-panel-right .panel-info {
+  font-size: 8px;
+  color: #4b5563;
+  font-weight: 700;
+}

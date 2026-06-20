@@ -1,0 +1,50 @@
+.feed-card {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+}
+
+.feed-list {
+  scrollbar-width: thin;
+  scrollbar-color: #1e294b #0b0f19;
+}
+
+.post-item {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.post-item .avatar {
+  flex-shrink: 0;
+}
+
+.post-item .tag {
+  letter-spacing: 0.05em;
+}
+
+.action-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.join-btn {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px;
+  background: linear-gradient(to right, #1e294b, #0f172a);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 16px;
+  font-size: 9px;
+  font-weight: 800;
+  color: #60a5fa;
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.join-btn:hover {
+  background: rgba(30, 58, 138, 0.4);
+  color: #ffffff;
+  border-color: rgba(59, 130, 246, 0.4);
+}

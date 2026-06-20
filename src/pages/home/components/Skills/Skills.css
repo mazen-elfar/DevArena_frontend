@@ -1,0 +1,40 @@
+.skills-card {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+}
+
+.canvas-area {
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.grid-dots {
+  background-image: radial-gradient(#1e294b 1px, transparent 1px);
+  background-size: 16px 16px;
+  opacity: 0.3;
+}
+
+.skill-node.master .node-icon {
+  background: rgba(139, 92, 246, 0.1);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.15);
+}
+
+.node-container:hover .node-icon {
+  background: #111827;
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.node-tooltip {
+  backdrop-blur: 8px;
+}
+
+.footer-labels .footer-link {
+  color: #6366f1;
+  font-weight: 700;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.footer-labels .footer-link:hover {
+  color: #818cf8;
+  text-decoration: underline;
+}

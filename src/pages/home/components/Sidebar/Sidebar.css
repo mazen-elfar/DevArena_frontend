@@ -1,0 +1,78 @@
+.sidebar-container {
+  scrollbar-width: thin;
+  scrollbar-color: #1e294b #05070e;
+}
+
+.nav-button {
+  color: #94a3b8;
+  background: transparent;
+}
+
+.nav-button:hover {
+  color: #ffffff;
+  background: rgba(15, 23, 42, 0.4);
+}
+
+.nav-button.active {
+  background: rgba(30, 41, 75, 0.4);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  box-shadow: inset 0 0 12px rgba(59, 130, 246, 0.1);
+}
+
+.xp-bar-container {
+  height: 6px;
+  width: 100%;
+  background: #111827;
+  border-radius: 9999px;
+  overflow: hidden;
+  padding: 1px;
+  border: 1px solid rgba(30, 41, 75, 0.4);
+}
+
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #6366f1, #a855f7);
+  border-radius: 9999px;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stats-grid .label {
+  font-size: 10px;
+  color: #6b7280;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.stats-grid .value {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-top: 4px;
+}
+
+.stats-grid .value.highlight {
+  color: #818cf8;
+}
+
+.stats-grid .value.accent {
+  color: #60a5fa;
+}
+
+.upgrade-button {
+  background: rgba(79, 70, 229, 0.2);
+  color: #a5b4fc;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.upgrade-button:hover {
+  background: #4f46e5;
+  color: #ffffff;
+}
