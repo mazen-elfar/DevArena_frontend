@@ -1,8 +1,10 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { 
   Sparkles, Trophy, Flame, Swords, Home as HomeIcon, ClipboardList, 
-  Crown, GitFork, Users2, Brain, Gem, Grid, Settings, Zap 
+  Crown, GitFork, Users2, Brain, Gem, Grid, Settings, Zap, LogOut 
 } from "lucide-react";
+import useAuthStore from "../../../../store/auth.store";
+
 
 /**
  * Sidebar Component - CRITICAL: This is the main application sidebar.
@@ -17,7 +19,9 @@ import {
  */
 export function Sidebar({ userStats, activeTab, setActiveTab, onUpgradeClick, onProfileClick }) {
   const navigate = useNavigate();
+  const { logout } = useAuthStore();
   const menuItems = [
+
     { id: "home", label: "Home", icon: HomeIcon, path: "/home" },
     { id: "tournaments", label: "Tournaments", icon: Trophy, path: "/tournaments" },
     { id: "battles", label: "Battles", icon: Swords, path: "/battles" },
@@ -41,6 +45,12 @@ export function Sidebar({ userStats, activeTab, setActiveTab, onUpgradeClick, on
       navigate(item.path);
     }
   };
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/auth');
+  };
+
 
   return (
     <aside className="w-64 bg-surface-dim border-r border-outline-variant flex flex-col justify-between h-screen fixed top-0 left-0 z-20 overflow-y-auto font-sans sidebar-container">
@@ -98,8 +108,18 @@ export function Sidebar({ userStats, activeTab, setActiveTab, onUpgradeClick, on
               </li>
             );
           })}
+          <li>
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 nav-button hover:bg-red-500/10 hover:text-red-400 group/logout"
+            >
+              <LogOut className="w-4 h-4 text-gray-400 group-hover/logout:text-red-400" />
+              <span>Logout</span>
+            </button>
+          </li>
         </ul>
       </div>
+
 
       <div className="p-4 space-y-4">
         <div 

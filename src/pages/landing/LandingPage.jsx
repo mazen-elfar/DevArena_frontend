@@ -431,7 +431,7 @@ const Footer = () => (
 // ── Main Page ─────────────────────────────────────────────────────────────────
 const LandingPage = () => {
   const navigate = useNavigate();
-  const handleSignIn = () => navigate('/home');
+  const handleSignIn = () => navigate('/auth');
 
   return (
     <div className="lp-root">

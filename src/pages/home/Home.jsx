@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { Header } from "./components/Header/Header";
+import useAuthStore from "../../store/auth.store";
 import { HologramProjection } from "./components/Hologram/Hologram";
+
 import { AICoreCard } from "./components/AICore/AICore";
 import { GrindProgression } from "./components/Grind/Grind";
 import { SkillTrees } from "./components/Skills/Skills";
@@ -50,11 +52,40 @@ import "./components/Modals/UpgradeModal/UpgradeModal.css";
 import "./components/Modals/MatchSimulatorModal/MatchSimulatorModal.css";
 
 export default function Home() {
+  const { user } = useAuthStore();
+  
   // --- UI States ---
   const [activeTab, setActiveTab] = useState("home");
-  const [userStats, setUserStats] = useState(initialUserStats);
   
+  // Local user stats state derived from Auth Store
+  const [userStats, setUserStats] = useState({
+    ...initialUserStats,
+    username: user?.username || initialUserStats.username,
+    avatar: user?.avatarUrl || initialUserStats.avatar,
+    level: user?.level || initialUserStats.level,
+    xp: Number(user?.xp) || initialUserStats.xp,
+    battlesWon: user?.profile?.battlesWon || initialUserStats.battlesWon,
+    globalRank: user?.profile?.rank?.order || initialUserStats.globalRank,
+    title: user?.profile?.rank?.name || initialUserStats.title,
+  });
+
+  useEffect(() => {
+    if (user) {
+      setUserStats(prev => ({
+        ...prev,
+        username: user.username,
+        avatar: user.avatarUrl || prev.avatar,
+        level: user.level,
+        xp: Number(user.xp),
+        battlesWon: user.profile?.battlesWon || prev.battlesWon,
+        globalRank: user.profile?.rank?.order || prev.globalRank,
+        title: user.profile?.rank?.name || prev.title,
+      }));
+    }
+  }, [user]);
+
   // --- Data States ---
+
   const [leaderboard] = useState(initialLeaderboard);
   const [quests] = useState(initialQuests);
   const [feed] = useState(initialCommunityFeed);
