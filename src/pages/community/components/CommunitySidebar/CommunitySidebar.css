@@ -1,0 +1,219 @@
+/* ─── Community Sidebar ─────────────────────────────────────────────────────── */
+
+.cs-sidebar {
+  width: 260px;
+  min-width: 260px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  background: rgba(10, 11, 17, 0.92);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  z-index: 40;
+  padding-bottom: 1rem;
+}
+.cs-sidebar::-webkit-scrollbar { display: none; }
+
+/* Brand */
+.cs-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 1.25rem 1.25rem 0.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  margin-bottom: 0.75rem;
+}
+.cs-brand-icon { font-size: 1.4rem; }
+.cs-brand-name {
+  font-family: 'Geist', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #e2e2e8;
+  letter-spacing: -0.01em;
+}
+
+/* Nav */
+.cs-nav { flex: 1; padding: 0 0.5rem; display: flex; flex-direction: column; gap: 0.25rem; }
+
+.cs-section { margin-bottom: 0.5rem; }
+
+.cs-section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(185, 202, 203, 0.4);
+  padding: 0.5rem 0.75rem 0.25rem;
+  display: block;
+}
+
+.cs-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  text-align: left;
+}
+.cs-nav-item:hover {
+  background: rgba(255,255,255,0.05);
+  color: #e2e2e8;
+}
+.cs-nav-item.active {
+  background: rgba(0, 240, 255, 0.08);
+  color: #00f0ff;
+}
+.cs-nav-item.active .cs-nav-icon { color: #00f0ff; }
+
+.cs-nav-icon {
+  font-size: 18px;
+  color: inherit;
+  flex-shrink: 0;
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+}
+.cs-nav-item.active .cs-nav-icon {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+}
+
+.cs-nav-label { flex: 1; }
+
+.cs-nav-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(0, 240, 255, 0.15);
+  color: #00f0ff;
+  padding: 1px 6px;
+  border-radius: 20px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Spaces Block */
+.cs-spaces-block {
+  padding: 0 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.cs-spaces-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 0.75rem;
+}
+.cs-spaces-toggle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: rgba(0,240,255,0.6);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 0.25rem;
+  transition: color 0.15s;
+}
+.cs-spaces-toggle:hover { color: #00f0ff; }
+
+.cs-spaces-list { display: flex; flex-direction: column; gap: 1px; }
+
+.cs-space-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.cs-space-item:hover { background: rgba(255,255,255,0.04); }
+
+.cs-space-icon { font-size: 1rem; flex-shrink: 0; }
+.cs-space-name { flex: 1; font-size: 0.8375rem; color: #94a3b8; font-family: 'Inter', sans-serif; text-align: left; }
+.cs-space-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: rgba(148,163,184,0.5);
+}
+
+/* Developer Identity Card */
+.cs-identity-card {
+  margin: 0.5rem 0.75rem 0.5rem;
+  padding: 0.875rem;
+  border-radius: 12px;
+  background: var(--rank-bg, rgba(0,240,255,0.06));
+  border: 1px solid color-mix(in srgb, var(--rank-color, #00f0ff) 20%, transparent);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.cs-identity-avatar-wrap { position: relative; flex-shrink: 0; }
+.cs-identity-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1.5px solid rgba(255,255,255,0.08);
+  background: #1c1f26;
+}
+.cs-identity-rank-dot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid rgba(10,11,17,0.9);
+}
+
+.cs-identity-info { flex: 1; min-width: 0; }
+.cs-identity-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #e2e2e8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Inter', sans-serif;
+}
+.cs-identity-meta {
+  font-size: 11px;
+  color: rgba(148,163,184,0.7);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 1px;
+}
+
+.cs-xp-bar-track {
+  height: 3px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 2px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+.cs-xp-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s ease;
+  box-shadow: 0 0 6px currentColor;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .cs-sidebar { display: none; }
+}

@@ -1,84 +1,126 @@
-/* Community Feed Styles - Lumina Cyber Aesthetic */
-@reference "../../index.css";
+/* DevArena Community Hub V3 Root Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap');
 
-:root {
-    --community-bg: #10131b;
-    --community-surface: rgba(28, 28, 30, 0.4);
-    --community-accent: #adc6ff;
-    --community-text: #e0e2ed;
-    --community-text-variant: #c1c6d7;
+.comm-page {
+  display: flex;
+  height: 100vh;
+  background: #02040a;
+  color: #fff;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
 }
 
-.community-page {
-    background-color: var(--community-bg);
-    color: var(--community-text);
+.comm-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+.comm-main::-webkit-scrollbar { width: 6px; }
+.comm-main::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+
+.comm-content-grid {
+  display: flex;
+  gap: 2rem;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem 2rem 5rem;
 }
 
-.glass-panel {
-    background: var(--community-surface);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+/* Feed Column */
+.comm-feed-col {
+  flex: 1;
+  min-width: 0; /* Important for flex child truncation */
+  display: flex;
+  flex-direction: column;
 }
 
-.custom-scrollbar::-webkit-scrollbar {
-    width: 4px;
+.comm-feed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
+.comm-page-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #f8fafc;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #414755;
-    border-radius: 10px;
+.comm-feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
-.bezier-transition {
-    transition: all 0.6s cubic-bezier(0.2, 0, 0, 1);
+/* Loading & Empty States */
+.comm-loading {
+  display: flex;
+  flex-direction: column; align-items: center; justify-content: center;
+  padding: 4rem 1rem;
+  gap: 1rem;
+  color: rgba(148,163,184,0.5);
+}
+.comm-spinner {
+  width: 40px; height: 40px;
+  border: 3px solid rgba(0, 240, 255, 0.1);
+  border-top-color: #00f0ff;
+  border-radius: 50%;
+  animation: comm-spin 0.8s linear infinite;
+}
+@keyframes comm-spin { to { transform: rotate(360deg); } }
+
+.comm-empty {
+  text-align: center;
+  padding: 5rem 2rem;
+  background: rgba(18, 20, 28, 0.4);
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+}
+.comm-empty h3 { color: #f8fafc; margin-bottom: 8px; }
+.comm-empty p { color: rgba(148, 163, 184, 0.6); font-size: 0.875rem; }
+
+.comm-sentinel {
+  height: 100px;
+  display: flex; align-items: center; justify-content: center;
+}
+.comm-spinner-small {
+  width: 20px; height: 20px;
+  border: 2px solid rgba(255,255,255,0.05);
+  border-top-color: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  animation: comm-spin 1s linear infinite;
 }
 
-/* Specific component styles */
-.composer-textarea {
-    @apply w-full bg-transparent border-none focus:ring-0 resize-none font-sans text-base h-12 pt-2;
-    color: var(--color-on-surface);
+/* FAB */
+.comm-quick-fab {
+  position: fixed;
+  bottom: 2rem; right: 2rem;
+  width: 56px; height: 56px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #00f0ff, #818cf8);
+  color: #000;
+  border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 12px 32px rgba(0, 240, 255, 0.25);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 100;
+}
+.comm-quick-fab:hover { transform: scale(1.1) rotate(5deg); }
+.comm-quick-fab span { font-size: 28px; font-weight: 700; }
+
+@media (max-width: 1024px) {
+  .comm-content-grid { padding: 1rem; }
 }
 
-.composer-textarea::placeholder {
-    color: color-mix(in srgb, var(--color-on-surface-variant) 40%, transparent);
-}
-
-.post-card {
-    background: var(--community-surface);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    @apply rounded-2xl overflow-hidden;
-    transition: all 0.6s cubic-bezier(0.2, 0, 0, 1);
-}
-
-.post-card:hover {
-    @apply -translate-y-0.5 shadow-2xl;
-}
-
-.badge-level {
-    @apply px-2 py-0.5 bg-indigo-500/20 text-indigo-400 text-[10px] font-mono rounded uppercase;
-}
-
-.badge-champion {
-    @apply px-2 py-0.5 bg-orange-500/20 text-orange-400 text-[10px] font-mono rounded uppercase;
-}
-
-.battle-victory-card {
-    position: relative;
-    background: linear-gradient(to bottom right, #1c2028, #10131b);
-    @apply p-8 rounded-2xl border border-white/5 overflow-hidden;
-}
-
-/* Animations */
-@keyframes spin-slow {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.animate-spin-slow {
-    animation: spin-slow 12s linear infinite;
+@media (max-width: 768px) {
+  .comm-page-title { font-size: 1.25rem; }
+  .comm-feed-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
 }

@@ -1,51 +1,583 @@
-export const communityData = {
-  trending: [
-    { tag: "RustOptimization", posts: "1.2k" },
-    { tag: "ThreeJSPerformance", posts: 842 },
-    { tag: "WebGPU_Future", posts: 560 },
-    { tag: "Bun_vs_Node", posts: 421 }
-  ],
-  topDevelopers: [
-    { username: "luna_codes", xp: "9,420", avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuBdWFe4ySxL5iB_6yxX6DLBpjXh9Y24i8j-7bNqbWnVdqE-X8UlEDmZyBzjgm5ttRReAUaoCQXeDaAnwe2487SpVXVhr7UGp1zaGr4j5z1gbrDaNitAjViRfdfzP5hs3KsjNfA8rPuo00qEMJoOUJEY_D6e4oGD_1P7oGd1pfH0ZX4JBdAJtuanim7NHrEqd5x7wyeYGgoX1msRJBI-JhIGPRiOOEjLE9jSBroWl8ID5ud2fi5QKIoYIERRVc3IYz2e2DxWwuP3fw" },
-    { username: "dave_script", xp: "8,115", avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuDsfO51BFknJ15m3yaSdoBlTEiRNr48ux1WbVkMD4Bh4muSYWEBHF2HScfGhnDzZTN5mtlBUIF2BlJxE1w2cAQvLk5dsEUJ0I81PyZfliJ-OJMm-sQVP6wVwzKLTrz_Xy_jzqagHDdU4d1q2iKp9CgrGt_UT5_b4U5dXgPc3kAzizUYqfic81_NXNHo7DcKC9k-A8n_Bn01u2qhI7zEtvtqYiKl0Oo7sv1egZF9YAovxrIgbTbnYr1yQfAbd_5FPQNCstL8Nr0rtg" }
-  ],
-  onlineFriends: [
-    { username: "dev_sarah", avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuDAAnsj4FaEIugYpBFQVWYKgH8t5Y_DZhknPJhxaynVjrGhMJBdMUjwqlnw59ulHojFOdfDKmf6NzTFJm3C_hZoMX8xilmsVYS22ZoRfPC3LIzDATxksSv1iyueIRQ4roKBBU4vZXd_ZHWcKUZhLCUT4Z6NmryM3hMoCP_nrZPFE2wB0px8lbLdUYv1wjHhCCyo53PskpJ8IfDIubBdVAWeXk4PvdDPIRc_BuOQehpIHDxCpcys5_qyOAG0fq6q8Fkfhxr_E00txg" },
-    { username: "pixel_king", avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuCAWvojc3jNapdds7If71xXzx56UVBS8sYcb0sconZ26AUKhALrD-RzG624WzsOabs-kUooDdtcgohImCRtYvv_wpktDLLoVUwc0_o4oUUVvcFIsk1XoGwqErNkHEXsznwPJgw-gn-UczAQRU0aauTNmH8Lfd2wRINilsHDpauzy4hKu3YUZdlc1eNPIRsgKs4fM14tFpPpq12q0yyax1zF9sQwCo1wDpt1Afy13e0uVrEmpn1bawB_y8ebJbAY3BT1-VhRNhxD7g" }
-  ],
-  posts: [
+/**
+ * Community Hub V3 — Mock Data Constants
+ *
+ * All data follows unified schemas for API-first architecture.
+ * The `metadata` field carries post-type-specific data.
+ * Developer identity is consistent across all surfaces.
+ */
+
+// ─── Developer Identities ─────────────────────────────────────────────────────
+
+export const DEVELOPER_ZEUS = {
+  id: 'usr_zeus_01',
+  username: 'zeusdev',
+  displayName: 'Zeus Nakamura',
+  avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=zeus&backgroundColor=0a0a15',
+  banner: null,
+  bio: 'Full-stack engineer. Open source contributor. Building at the speed of thought.',
+  major: 'Software Engineering',
+  university: 'MIT',
+  region: '🇺🇸',
+  level: 87,
+  xp: 142800,
+  rank: 'Diamond',
+  rankColor: '#00f0ff',
+  reputation: 4250,
+  followers: 1240,
+  following: 380,
+  githubUrl: 'https://github.com/zeusdev',
+  linkedinUrl: null,
+  portfolioUrl: 'https://zeusdev.io',
+};
+
+export const DEVELOPER_NOVA = {
+  id: 'usr_nova_02',
+  username: 'vector_nova',
+  displayName: 'Nova Chen',
+  avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=nova&backgroundColor=0a0a15',
+  banner: null,
+  bio: 'Systems programmer. Rust evangelist. Competitive coder.',
+  major: 'Computer Science',
+  university: 'Stanford',
+  region: '🇨🇳',
+  level: 95,
+  xp: 198400,
+  rank: 'Champion',
+  rankColor: '#f59e0b',
+  reputation: 8120,
+  followers: 3840,
+  following: 210,
+  githubUrl: 'https://github.com/vectornova',
+  linkedinUrl: 'https://linkedin.com/in/vectornova',
+  portfolioUrl: null,
+};
+
+export const DEVELOPER_LUNA = {
+  id: 'usr_luna_03',
+  username: 'luna_codes',
+  displayName: 'Luna Petrov',
+  avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=luna&backgroundColor=0a0a15',
+  banner: null,
+  bio: 'React architect. Design systems. 10x UI.',
+  major: 'HCI',
+  university: 'Carnegie Mellon',
+  region: '🇷🇺',
+  level: 73,
+  xp: 94200,
+  rank: 'Platinum',
+  rankColor: '#c084fc',
+  reputation: 3690,
+  followers: 2100,
+  following: 540,
+  githubUrl: 'https://github.com/lunacodes',
+  linkedinUrl: 'https://linkedin.com/in/lunacodes',
+  portfolioUrl: null,
+};
+
+export const DEVELOPER_ZEN = {
+  id: 'usr_zen_04',
+  username: 'coder_zen',
+  displayName: 'Zendaya Okonkwo',
+  avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=zen&backgroundColor=0a0a15',
+  banner: null,
+  bio: 'Open-source architect. Contributed to 50+ repos.',
+  major: 'Computer Science',
+  university: 'University of Lagos',
+  region: '🇳🇬',
+  level: 85,
+  xp: 138000,
+  rank: 'Diamond',
+  rankColor: '#00f0ff',
+  reputation: 6450,
+  followers: 2940,
+  following: 170,
+  githubUrl: 'https://github.com/coderzen',
+  linkedinUrl: null,
+  portfolioUrl: null,
+};
+
+export const DEVELOPER_MARCUS = {
+  id: 'usr_marcus_05',
+  username: 'marcus_dev',
+  displayName: 'Marcus Alves',
+  avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=marcus&backgroundColor=0a0a15',
+  banner: null,
+  bio: 'Backend engineer. Distributed systems. Go + Rust.',
+  major: 'Software Engineering',
+  university: 'USP',
+  region: '🇧🇷',
+  level: 62,
+  xp: 71400,
+  rank: 'Gold',
+  rankColor: '#f59e0b',
+  reputation: 2180,
+  followers: 870,
+  following: 430,
+  githubUrl: 'https://github.com/marcusdev',
+  linkedinUrl: 'https://linkedin.com/in/marcusdev',
+  portfolioUrl: null,
+};
+
+export const DEVELOPER_PIXEL = {
+  id: 'usr_pixel_06',
+  username: 'pixel_king',
+  displayName: 'Pixel King',
+  avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=pixel&backgroundColor=0a0a15',
+  banner: null,
+  bio: 'Game dev + WebGL. Making the browser do wild things.',
+  major: 'Game Design',
+  region: '🇯🇵',
+  level: 55,
+  xp: 48000,
+  rank: 'Gold',
+  rankColor: '#f59e0b',
+  reputation: 1540,
+  followers: 540,
+  following: 280,
+  githubUrl: 'https://github.com/pixelking',
+  linkedinUrl: null,
+  portfolioUrl: 'https://pixelk.dev',
+};
+
+export const DEVELOPER_DAVE = {
+  id: 'usr_dave_07',
+  username: 'dave_script',
+  displayName: 'Dave Schmidt',
+  avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=dave&backgroundColor=0a0a15',
+  banner: null,
+  bio: 'JavaScript wizard. Node.js core contributor wannabe.',
+  major: 'Computer Science',
+  university: 'TU Berlin',
+  region: '🇩🇪',
+  level: 78,
+  xp: 108500,
+  rank: 'Platinum',
+  rankColor: '#c084fc',
+  reputation: 5120,
+  followers: 1820,
+  following: 390,
+  githubUrl: 'https://github.com/davescript',
+  linkedinUrl: null,
+  portfolioUrl: null,
+};
+
+export const DEVELOPER_SARAH = {
+  id: 'usr_sarah_08',
+  username: 'dev_sarah',
+  displayName: 'Sarah Kim',
+  avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=sarah&backgroundColor=0a0a15',
+  banner: null,
+  bio: 'ML engineer building the future.',
+  major: 'AI & Machine Learning',
+  university: 'Yonsei',
+  region: '🇰🇷',
+  level: 69,
+  xp: 82000,
+  rank: 'Platinum',
+  rankColor: '#c084fc',
+  reputation: 3210,
+  followers: 1340,
+  following: 510,
+  githubUrl: 'https://github.com/devsarah',
+  linkedinUrl: 'https://linkedin.com/in/devsarah',
+  portfolioUrl: null,
+};
+
+// ─── Unified Post Feed ────────────────────────────────────────────────────────
+
+export const MOCK_FEED = [
+  // ── Discussion Post ──
+  {
+    id: 'post_d1',
+    authorId: DEVELOPER_MARCUS.id,
+    author: DEVELOPER_MARCUS,
+    type: 'discussion',
+    visibility: 'public',
+    content: '🔥 Hot take: React 19 concurrent features are actually more intuitive than I expected. Just refactored a massive dashboard — cut LOC by 30% and eliminated most of my prop-drilling nightmares. Anyone else experiencing this?\n\nKey things that clicked for me: `useOptimistic`, `use()` with Suspense, and the new `<form action>` pattern. The mental model is finally consistent.',
+    tags: ['react', 'frontend', 'webdev', 'javascript'],
+    metadata: {},
+    reactions: { like: 128, celebrate: 14, insightful: 47 },
+    myReaction: null,
+    commentsCount: 45,
+    sharesCount: 18,
+    savedByMe: false,
+    engagementScore: 189,
+    reputationWeight: DEVELOPER_MARCUS.reputation,
+    recencyScore: 0.95,
+    followingWeight: 0,
+    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+  },
+
+  // ── Battle Victory Post ──
+  {
+    id: 'post_b1',
+    authorId: DEVELOPER_NOVA.id,
+    author: DEVELOPER_NOVA,
+    type: 'victory',
+    visibility: 'public',
+    content: 'Memory optimization battle — took it to the limit. 89% reduction by switching to arena allocators and removing all unnecessary clones. Rust makes you think about every byte.',
+    tags: ['rust', 'systems', 'algorithms', 'battle'],
+    metadata: {
+      opponent: { username: 'runtime_king', avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=rk', rank: 'Gold' },
+      problem: { title: 'Parallel Compute Optimizer', difficulty: 'Hard', slug: 'parallel-compute' },
+      ratingChange: +42,
+      xpEarned: 850,
+      myLanguage: 'Rust',
+      opponentLanguage: 'Python',
+      duration: '38:22',
+    },
+    reactions: { like: 892, celebrate: 214, insightful: 67 },
+    myReaction: 'celebrate',
+    commentsCount: 34,
+    sharesCount: 89,
+    savedByMe: false,
+    engagementScore: 1173,
+    reputationWeight: DEVELOPER_NOVA.reputation,
+    recencyScore: 0.88,
+    followingWeight: 0,
+    createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+  },
+
+  // ── Achievement Post ──
+  {
+    id: 'post_a1',
+    authorId: DEVELOPER_ZEN.id,
+    author: DEVELOPER_ZEN,
+    type: 'achievement',
+    visibility: 'public',
+    content: 'The grind pays off. Formally verified as an Arch-Architect after contributing to 50+ open-source repositories. This took 14 months of consistent work. For anyone doubting themselves: consistency > intensity.',
+    tags: ['opensource', 'milestone', 'achievement'],
+    metadata: {
+      achievement: {
+        id: 'arch_architect',
+        title: 'Arch-Architect',
+        description: '50+ open-source repository contributions verified',
+        icon: '🏛️',
+        rarity: 'Legendary',
+        xpAwarded: 5000,
+        unlockedAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
+      },
+    },
+    reactions: { like: 2400, celebrate: 890, insightful: 130 },
+    myReaction: 'celebrate',
+    commentsCount: 156,
+    sharesCount: 234,
+    savedByMe: true,
+    engagementScore: 3420,
+    reputationWeight: DEVELOPER_ZEN.reputation,
+    recencyScore: 0.82,
+    followingWeight: 0,
+    createdAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
+  },
+
+  // ── Quest Completion Post ──
+  {
+    id: 'post_q1',
+    authorId: DEVELOPER_LUNA.id,
+    author: DEVELOPER_LUNA,
+    type: 'quest',
+    visibility: 'public',
+    content: 'Just wrapped the "System Design Master" quest chain. 8 system design challenges, 3 architecture reviews, and 2 peer evaluations — done. The distributed caching problem was genuinely humbling.',
+    tags: ['systemdesign', 'quest', 'architecture'],
+    metadata: {
+      quest: {
+        id: 'system_design_master',
+        title: 'System Design Master',
+        difficulty: 'Expert',
+        difficultyColor: '#ef4444',
+        xpEarned: 3200,
+        completionTime: '6d 14h',
+        questChainPosition: '8/8',
+        badge: '⚙️',
+      },
+    },
+    reactions: { like: 340, celebrate: 78, insightful: 92 },
+    myReaction: null,
+    commentsCount: 28,
+    sharesCount: 41,
+    savedByMe: false,
+    engagementScore: 510,
+    reputationWeight: DEVELOPER_LUNA.reputation,
+    recencyScore: 0.78,
+    followingWeight: 1,
+    createdAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+  },
+
+  // ── Project Showcase Post ──
+  {
+    id: 'post_s1',
+    authorId: DEVELOPER_ZEUS.id,
+    author: DEVELOPER_ZEUS,
+    type: 'showcase',
+    visibility: 'public',
+    content: 'Shipping: DevMap — a visual dependency graph for monorepos. Drag, filter, trace any module\'s full import chain. Built because I was losing my mind in a 400-package workspace. Zero deps, pure canvas.',
+    tags: ['typescript', 'tooling', 'opensource', 'dx'],
+    metadata: {
+      project: {
+        title: 'DevMap',
+        description: 'Visual dependency graph explorer for monorepos',
+        coverImage: null,
+        githubUrl: 'https://github.com/zeusdev/devmap',
+        demoUrl: 'https://devmap.zeusdev.io',
+        technologies: ['TypeScript', 'Canvas API', 'Vite', 'Turborepo'],
+        stars: 847,
+        forks: 112,
+      },
+    },
+    reactions: { like: 612, celebrate: 145, insightful: 289 },
+    myReaction: 'insightful',
+    commentsCount: 73,
+    sharesCount: 128,
+    savedByMe: true,
+    engagementScore: 1046,
+    reputationWeight: DEVELOPER_ZEUS.reputation,
+    recencyScore: 0.72,
+    followingWeight: 0,
+    createdAt: new Date(Date.now() - 18 * 60 * 60 * 1000).toISOString(),
+  },
+
+  // ── Developer Text Post ──
+  {
+    id: 'post_dev1',
+    authorId: DEVELOPER_DAVE.id,
+    author: DEVELOPER_DAVE,
+    type: 'developer',
+    visibility: 'public',
+    content: 'Spent 3 hours debugging a race condition in my event loop today.\n\nRoot cause: I was await-ing inside a forEach. This has been documented for years and I still fell for it. The fix was 1 line. The debugging was 3 hours.\n\nThis is software engineering.',
+    tags: ['javascript', 'nodejs', 'debugging', 'async'],
+    metadata: {},
+    reactions: { like: 1840, celebrate: 290, insightful: 540 },
+    myReaction: 'insightful',
+    commentsCount: 212,
+    sharesCount: 387,
+    savedByMe: false,
+    engagementScore: 2670,
+    reputationWeight: DEVELOPER_DAVE.reputation,
+    recencyScore: 0.65,
+    followingWeight: 0,
+    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+  },
+
+  // ── Achievement Post ──
+  {
+    id: 'post_a2',
+    authorId: DEVELOPER_ZEUS.id,
+    author: DEVELOPER_ZEUS,
+    type: 'achievement',
+    visibility: 'public',
+    content: 'Diamond rank achieved. 3 months of daily battles. The consistency is the strategy.',
+    tags: ['milestone', 'battle', 'ranked'],
+    metadata: {
+      achievement: {
+        id: 'diamond_rank',
+        title: 'Diamond Rank Unlocked',
+        description: 'Reached Diamond rank through competitive battles',
+        icon: '💎',
+        rarity: 'Epic',
+        xpAwarded: 2500,
+        unlockedAt: new Date(Date.now() - 30 * 60 * 60 * 1000).toISOString(),
+      },
+    },
+    reactions: { like: 540, celebrate: 198, insightful: 32 },
+    myReaction: null,
+    commentsCount: 47,
+    sharesCount: 55,
+    savedByMe: false,
+    engagementScore: 770,
+    reputationWeight: DEVELOPER_ZEUS.reputation,
+    recencyScore: 0.60,
+    followingWeight: 0,
+    createdAt: new Date(Date.now() - 30 * 60 * 60 * 1000).toISOString(),
+  },
+];
+
+// ─── Trending Discussions ─────────────────────────────────────────────────────
+
+export const MOCK_TRENDING = [
+  { id: 't1', title: 'React 19 vs SolidJS — Which wins in 2026?', space: 'Frontend', engagement: 2840, trend: '+18%' },
+  { id: 't2', title: 'AI Agents are replacing juniors. True or false?', space: 'Career', engagement: 5120, trend: '+42%' },
+  { id: 't3', title: 'PostgreSQL 17 performance tips nobody talks about', space: 'Backend', engagement: 1680, trend: '+11%' },
+  { id: 't4', title: 'Resume for FAANG — what actually matters in 2026', space: 'Career', engagement: 3240, trend: '+29%' },
+  { id: 't5', title: 'Rust vs Go for microservices — real benchmarks', space: 'Systems', engagement: 920, trend: '+7%' },
+];
+
+// ─── Tags ─────────────────────────────────────────────────────────────────────
+
+export const MOCK_TAGS = [
+  { id: 'tag_react', name: 'React', slug: 'react', color: '#61DAFB', icon: '⚛️', followersCount: 14200 },
+  { id: 'tag_rust', name: 'Rust', slug: 'rust', color: '#F74C00', icon: '🦀', followersCount: 8750 },
+  { id: 'tag_ai', name: 'AI', slug: 'ai', color: '#8B5CF6', icon: '🤖', followersCount: 22100 },
+  { id: 'tag_systemdesign', name: 'System Design', slug: 'system-design', color: '#10B981', icon: '🏗️', followersCount: 11300 },
+  { id: 'tag_career', name: 'Career', slug: 'career', color: '#F59E0B', icon: '🚀', followersCount: 9840 },
+  { id: 'tag_os', name: 'Open Source', slug: 'open-source', color: '#6EE7B7', icon: '🌍', followersCount: 7620 },
+];
+
+// ─── Spaces ───────────────────────────────────────────────────────────────────
+
+export const MOCK_SPACES = [
+  { id: 'sp_react', name: 'React', icon: '⚛️', color: '#61DAFB', members: 14200, postsToday: 142 },
+  { id: 'sp_ai', name: 'AI & ML', icon: '🤖', color: '#8B5CF6', members: 22100, postsToday: 318 },
+  { id: 'sp_career', name: 'Career Hub', icon: '🚀', color: '#F59E0B', members: 9840, postsToday: 87 },
+  { id: 'sp_os', name: 'Open Source', icon: '🌍', color: '#6EE7B7', members: 7620, postsToday: 64 },
+  { id: 'sp_sys', name: 'Systems', icon: '⚙️', color: '#F74C00', members: 5480, postsToday: 39 },
+  { id: 'sp_devops', name: 'DevOps', icon: '🔧', color: '#60A5FA', members: 6130, postsToday: 51 },
+];
+
+// ─── Top Developers (Weekly Leaderboard) ─────────────────────────────────────
+
+export const MOCK_TOP_DEVELOPERS = [
+  { ...DEVELOPER_NOVA,  weeklyXp: 9420, weeklyRank: 1, weeklyChange: +0 },
+  { ...DEVELOPER_DAVE,  weeklyXp: 8115, weeklyRank: 2, weeklyChange: +1 },
+  { ...DEVELOPER_ZEN,   weeklyXp: 7890, weeklyRank: 3, weeklyChange: -1 },
+  { ...DEVELOPER_ZEUS,  weeklyXp: 7240, weeklyRank: 4, weeklyChange: +2 },
+  { ...DEVELOPER_LUNA,  weeklyXp: 6780, weeklyRank: 5, weeklyChange: -1 },
+];
+
+// ─── Online Friends ───────────────────────────────────────────────────────────
+
+export const MOCK_ONLINE_FRIENDS = [
+  { ...DEVELOPER_SARAH, status: 'Coding Now', statusColor: '#22c55e' },
+  { ...DEVELOPER_PIXEL, status: 'In a Battle ⚔️', statusColor: '#f59e0b' },
+  { ...DEVELOPER_MARCUS, status: 'Idle', statusColor: '#6b7280' },
+];
+
+// ─── Suggested Developers ─────────────────────────────────────────────────────
+
+export const MOCK_SUGGESTIONS = [
+  { ...DEVELOPER_LUNA,  sharedSkills: ['React', 'TypeScript'], reason: 'Popular in your spaces' },
+  { ...DEVELOPER_PIXEL, sharedSkills: ['WebGL', 'Canvas'], reason: 'Similar major' },
+  { ...DEVELOPER_ZEUS,  sharedSkills: ['TypeScript', 'Open Source'], reason: 'Active this week' },
+];
+
+// ─── Community Stats ──────────────────────────────────────────────────────────
+
+export const MOCK_STATS = {
+  activeDevelopers: 12480,
+  postsToday: 1842,
+  battlesToday: 734,
+  questsCompleted: 2190,
+};
+
+// ─── Mock Comments ────────────────────────────────────────────────────────────
+
+export const MOCK_COMMENTS = {
+  post_d1: [
     {
-      id: "p1",
-      type: "text",
-      author: { username: "marcus_dev", avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuCRtWnGRURdQkZRtvACbB_e9AUYe_Z5hQMXRqNdvQI8BhRZPhNCep2NL7TBdXGrYI68rG5_vt8Bx6rwjQCozXJLzx9IZZ-fQsCOap7dCHl-2UO9Vwe1vlVNcJUHanF5IJAqm3NNCUUFhDXs66cAfSDFOjZz8pxVZShGzkq7fU0Juy-uuCMc4JcXXc47MHdbqkr4OsMtagRhVL1NjyKl35NoCS5M6FXluob7FZ8jTsnJyq2z022kss5tcF8nwGzNdUd3ITuo8ZuQ", level: 42 },
-      timestamp: "2 hours ago",
-      content: "Is anyone else finding the new React 19 concurrent features significantly more intuitive for complex state management? I just refactored a massive dashboard and cut down the lines by 30%. Discussion open! 👇",
-      data: { hashtags: ["#ReactJS", "#FrontendArchitecture", "#WebDev"], likes: 128, comments: 45, liked: false }
+      id: 'c1',
+      postId: 'post_d1',
+      parentId: null,
+      author: DEVELOPER_LUNA,
+      content: 'The `useOptimistic` hook alone made it worth upgrading. Being able to assume the happy path and rollback on error changes how I think about forms entirely.',
+      reactions: { like: 34 },
+      myReaction: null,
+      createdAt: new Date(Date.now() - 90 * 60 * 1000).toISOString(),
+      replies: [
+        {
+          id: 'c1r1',
+          postId: 'post_d1',
+          parentId: 'c1',
+          author: DEVELOPER_MARCUS,
+          content: 'Agreed — though I\'d argue Remix had this pattern first with their action/loader model. React just formalized it.',
+          reactions: { like: 12 },
+          myReaction: null,
+          createdAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+          replies: [],
+        },
+      ],
     },
     {
-      id: "p2",
-      type: "victory",
-      author: { username: "vector_nova", avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuC8glMy50mBpR1G9hY_XajhMQfNzWYNlbfjwzTeQt73BSH2CkeVKqtyHhxHq6KjIhHwfjmIxev4GOcPpFzixP00vHWKI0h-ksf7My-iOAGUt5uF4FHvO5EKgs9MV9PVA4Y2UOa1OF0-5q1I3922olVst56lJ5ua5rwA-x1Vs9FNW9ZMTDns2yPCEdS72uMc8VtmCEkiq-MNer8pencaexk20GCsSzBQM0RBWxYxleVhZNCqSPJB4WyBmQ6j2Xp5BNmc5ma0vyp7fQ", level: 50, rank: "Champion" },
-      timestamp: "5 hours ago",
-      content: "Successfully optimized memory usage by 89% in the Parallel Compute Battle.",
-      data: { 
-        matchTitle: "Rust vs Python", 
-        winnerLogo: "https://lh3.googleusercontent.com/aida-public/AB6AXuC0SfRvBIOBQlR-boISMpDazC2HipdC1BKtq3VrKb9Kudkg_TH2YVKDd8k6CRwtVhy1Pj8HZpGT2b63qTks_a_GxRXpwdQjzAMtDUjYBed6pDGXK2WwnA8Mawcf8wap8cjW7Yis52cqzgt8LYuFuKZYeaLIWtmYxrDMP15igjWL45dsSnAz3JYilM2RduCz3D5vt5O9L2qeDnNJVbw-Vb9DQnHuHsJ4R_ljAm47EhMqeWxd8PI9NgbAfVwv0swxvlyiZ1HBg-z6qA",
-        winnerLabel: "Efficiency",
-        loserLogo: "https://lh3.googleusercontent.com/aida-public/AB6AXuBfnAiN4HQRrukKdqN7VsAne0urL5a0nZH9XJbqQ2ybtpf62P2We0yZB5RcEk7U42WHeTEt5pJz_f8r7V7OlPdg0aA9xUHz_6-P6T3hcOeCpMKhK6JmljQBBLGVV3BsAzIgUUYrBD04sv4SmDBkAK23Vns1KRxfAuqvuYFFbbZL2dTzDTHqA8yXP0ojC9uOYwhAxzEPuoq2YnMs3_atakVuSoq-cIBstnEWb-3Pv5Z5BdBjyXQPGSvbqRDY0Bwup3t-Yz3_0k8anw",
-        loserLabel: "Runtime",
-        likes: 892, 
-        comments: 12,
-        liked: true
-      }
+      id: 'c2',
+      postId: 'post_d1',
+      parentId: null,
+      author: DEVELOPER_ZEUS,
+      content: 'The prop-drilling relief is real. Combining the new context API with Zustand for server state changed everything for my architecture.',
+      reactions: { like: 19 },
+      myReaction: 'like',
+      createdAt: new Date(Date.now() - 75 * 60 * 1000).toISOString(),
+      replies: [],
     },
-    {
-      id: "p3",
-      type: "achievement",
-      author: { username: "coder_zen", avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuCLxsiCqQILEG8gao5pXQdIjaLsDaYKPkXNrsKtNcDQ0qrHuuXr09X1Rp46-vf7MVdg1YaGLFmz4h1yJnv55gDR4GsJJcuqbiCdgKhr-rmUxDoi2MiT9MoBSl1dC-7RJ5qAvRk7TaYGfBmd8G4XH5JVyEobpw5ZhU_Jnb8Ykzr0B85oDRPPdMXxNpRBM7M12TQIARUcsYDIOylZJ3cgmnZyEokaHmX6fMCejvjT_p4ydSAlrRkzxlEBNUyirAeN3VYhQ15q2zj2gA", level: 85, rank: "Ascending" },
-      timestamp: "8 hours ago",
-      content: "Unlocked \"Arch-Architect\" status. Contributions to 50+ open source repositories verified.",
-      data: { milestone: "85", title: "New Milestone Reached", likes: "2.4k", comments: 156 }
-    }
-  ]
+  ],
+};
+
+// ─── Navigation Structure ─────────────────────────────────────────────────────
+
+export const COMMUNITY_NAV = [
+  {
+    section: 'Main',
+    items: [
+      { id: 'home', label: 'Home Feed', icon: 'home', badge: null },
+      { id: 'trending', label: 'Trending', icon: 'local_fire_department', badge: null },
+      { id: 'following', label: 'Following', icon: 'group', badge: 3 },
+      { id: 'saved', label: 'Saved Posts', icon: 'bookmark', badge: null },
+    ],
+  },
+  {
+    section: 'Social',
+    items: [
+      { id: 'friends', label: 'Friends', icon: 'people', badge: null },
+      { id: 'messages', label: 'Messages', icon: 'chat', badge: 5 },
+      { id: 'notifications', label: 'Notifications', icon: 'notifications', badge: 12 },
+    ],
+  },
+  {
+    section: 'Community',
+    items: [
+      { id: 'discussions', label: 'Discussions', icon: 'forum', badge: null },
+      { id: 'showcases', label: 'Showcases', icon: 'deployed_code', badge: null },
+      { id: 'learning', label: 'Learning', icon: 'school', badge: null },
+      { id: 'career', label: 'Career', icon: 'work', badge: null },
+      { id: 'opensource', label: 'Open Source', icon: 'code', badge: null },
+      { id: 'help', label: 'Help & Support', icon: 'help', badge: null },
+    ],
+  },
+  {
+    section: 'Competitive',
+    items: [
+      { id: 'battles', label: 'Battle Highlights', icon: 'swords', badge: null },
+      { id: 'tournaments', label: 'Tournament News', icon: 'emoji_events', badge: null },
+      { id: 'quests', label: 'Quest Achievements', icon: 'map', badge: null },
+    ],
+  },
+  {
+    section: 'Personal',
+    items: [
+      { id: 'myprofile', label: 'My Profile', icon: 'person', badge: null },
+      { id: 'myposts', label: 'My Posts', icon: 'article', badge: null },
+      { id: 'myachievements', label: 'My Achievements', icon: 'military_tech', badge: null },
+    ],
+  },
+];
+
+// ─── Feed Filters ─────────────────────────────────────────────────────────────
+
+export const FEED_FILTERS = [
+  { id: 'all', label: 'All', icon: null },
+  { id: 'following', label: 'Following', icon: null },
+  { id: 'trending', label: 'Trending', icon: '🔥' },
+  { id: 'achievements', label: 'Achievements', icon: '🏆' },
+  { id: 'battles', label: 'Battles', icon: '⚔️' },
+  { id: 'quests', label: 'Quests', icon: '🗺️' },
+  { id: 'projects', label: 'Projects', icon: '🛠️' },
+];
+
+// ─── Post Type Config ─────────────────────────────────────────────────────────
+
+export const POST_TYPE_CONFIG = {
+  developer: { label: 'Developer Post', color: '#00f0ff', icon: 'person' },
+  discussion: { label: 'Discussion', color: '#818cf8', icon: 'forum' },
+  achievement: { label: 'Achievement', color: '#f59e0b', icon: 'military_tech' },
+  victory: { label: 'Battle Victory', color: '#00f0ff', icon: 'swords' },
+  quest: { label: 'Quest Complete', color: '#a78bfa', icon: 'map' },
+  showcase: { label: 'Project Showcase', color: '#34d399', icon: 'deployed_code' },
+};
+
+// ─── Rank Config ─────────────────────────────────────────────────────────────
+
+export const RANK_CONFIG = {
+  Bronze:   { color: '#cd7f32', bg: 'rgba(205,127,50,0.12)', glow: 'rgba(205,127,50,0.25)' },
+  Silver:   { color: '#c0c0c0', bg: 'rgba(192,192,192,0.12)', glow: 'rgba(192,192,192,0.25)' },
+  Gold:     { color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', glow: 'rgba(245,158,11,0.25)' },
+  Platinum: { color: '#c084fc', bg: 'rgba(192,132,252,0.12)', glow: 'rgba(192,132,252,0.25)' },
+  Diamond:  { color: '#00f0ff', bg: 'rgba(0,240,255,0.12)', glow: 'rgba(0,240,255,0.25)' },
+  Champion: { color: '#f59e0b', bg: 'rgba(245,158,11,0.15)', glow: 'rgba(245,158,11,0.35)' },
 };

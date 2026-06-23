@@ -1,69 +1,120 @@
-import React, { useState } from 'react';
-import { Sidebar } from '../home/components/Sidebar/Sidebar';
+import React, { useEffect } from 'react';
 import { Header } from '../home/components/Header/Header';
-import { Post } from './components/Post';
-import { FeedComposer } from './components/FeedComposer';
-import { RightPanel } from './components/RightPanel';
+import { CommunitySidebar } from './components/CommunitySidebar/CommunitySidebar';
+import { FeedComposer } from './components/FeedComposer/FeedComposer';
+import { FeedFilters } from './components/FeedFilters/FeedFilters';
+import { CommunitySearch } from './components/CommunitySearch/CommunitySearch';
+import { PostCard } from './components/PostCard/PostCard';
+import { RightPanel } from './components/RightPanel/RightPanel';
+import useCommunityStore from './community.store';
 import { initialUserStats } from '../home/constants';
-import { communityData } from './constants';
 import './Community.css';
-import '../home/components/Sidebar/Sidebar.css';
-import '../home/components/Header/Header.css';
 
 export default function Community() {
-  const [activeTab, setActiveTab] = useState('community');
-  const [userStats] = useState(initialUserStats);
-  const [posts] = useState(communityData.posts);
+  const { 
+    feed, 
+    isLoading, 
+    hasMore, 
+    setFilter, 
+    appendFeed 
+  } = useCommunityStore();
+
+  const [page, setPage] = React.useState(1);
+
+  // 1. Initial Load
+  useEffect(() => {
+    setFilter('all');
+  }, [setFilter]);
+
+  // 2. Intersection Observer for Infinite Scroll
+  const observerRef = React.useRef();
+  const lastPostRef = React.useCallback(node => {
+    if (isLoading || !hasMore) return;
+    if (observerRef.current) observerRef.current.disconnect();
+
+    observerRef.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        setPage(prev => prev + 1);
+      }
+    });
+
+    if (node) observerRef.current.observe(node);
+  }, [isLoading, hasMore]);
+
+  // 3. Trigger append when page changes
+  useEffect(() => {
+    if (page > 1) {
+      appendFeed(page);
+    }
+  }, [page, appendFeed]);
 
   return (
-    <div className="flex h-screen bg-[#02040a] text-white overflow-hidden font-sans community-page">
-      {/* Reusing App's Sidebar */}
-      <Sidebar 
-        userStats={userStats} 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab}
-        onUpgradeClick={() => {}}
-        onProfileClick={() => {}}
-      />
+    <div className="comm-page">
+      {/* 1. Left Navigation Sidebar */}
+      <CommunitySidebar />
 
-      <main className="flex-1 ml-64 overflow-y-auto custom-scrollbar scroll-smooth">
-        {/* Reusing App's Header */}
-        <Header 
-          energy={userStats.energy} 
-          streak={userStats.streak}
-          onCreateBattle={() => {}} 
+      <main className="comm-main">
+        {/* 2. Global Header */}
+        <Header
+          energy={initialUserStats.energy}
+          streak={initialUserStats.streak}
+          onCreateBattle={() => {}}
           onJoinTournament={() => {}}
           onSearch={() => {}}
         />
 
-        <div className="p-8 max-w-[1400px] mx-auto">
-          <div className="grid grid-cols-12 gap-8 relative items-start">
-            {/* Feed Section */}
-            <div className="col-span-12 lg:col-span-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <FeedComposer userAvatar={userStats.avatar} />
-              
-              <div className="flex flex-col gap-8 pb-20">
-                {posts.map(post => (
-                  <Post key={post.id} post={post} />
-                ))}
-              </div>
+        <div className="comm-content-grid">
+          {/* 3. Middle Feed Column */}
+          <div className="comm-feed-col">
+            <div className="comm-feed-header">
+              <h1 className="comm-page-title">Community Feed</h1>
+              <CommunitySearch />
             </div>
 
-            {/* Right Side Panel */}
-            <div className="col-span-4 hidden lg:block animate-in fade-in slide-in-from-right-4 duration-700 delay-200">
-              <RightPanel 
-                trending={communityData.trending} 
-                topDevelopers={communityData.topDevelopers} 
-                onlineFriends={communityData.onlineFriends} 
-              />
+            <FeedComposer />
+            <FeedFilters />
+
+            <div className="comm-feed-list">
+              {isLoading && feed.length === 0 ? (
+                <div className="comm-loading">
+                  <div className="comm-spinner" />
+                  <span>Loading your ecosystem...</span>
+                </div>
+              ) : feed.length === 0 ? (
+                <div className="comm-empty">
+                  <h3>No posts found</h3>
+                  <p>Try adjusting your filters or follow more developers.</p>
+                </div>
+              ) : (
+                feed.map((post, index) => {
+                  if (feed.length === index + 1) {
+                    return (
+                      <div ref={lastPostRef} key={post.id}>
+                        <PostCard post={post} />
+                      </div>
+                    );
+                  }
+                  return <PostCard key={post.id} post={post} />;
+                })
+              )}
+
+              {/* Infinite Scroll Bottom Spinner */}
+              {isLoading && feed.length > 0 && (
+                <div className="comm-sentinel">
+                  <span className="comm-spinner-small" />
+                </div>
+              )}
             </div>
           </div>
+
+          {/* 4. Right Discovery Column */}
+          <RightPanel />
         </div>
       </main>
 
-      {/* Action Button - Premium FAB */}
-      <button className="fixed bottom-8 right-8 w-14 h-14 bg-indigo-500 text-white rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 z-50 hover:shadow-indigo-500/20">
-        <span className="material-symbols-outlined text-2xl">add</span>
+      {/* Floating Action Button for Mobile / Quick Post */}
+      <button className="comm-quick-fab" title="Quick Post">
+        <span className="material-symbols-outlined">add</span>
       </button>
     </div>
   );
