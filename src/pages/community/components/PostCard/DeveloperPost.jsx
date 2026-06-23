@@ -1,20 +1,23 @@
 import React from 'react';
 
+function renderContent(text) {
+  const parts = text.split(/(@\w+)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('@')) {
+      return <span key={i} className="pc-mention">{part}</span>;
+    }
+    return part;
+  });
+}
+
 export function DeveloperPost({ post }) {
   const { content } = post;
 
-  // Simple mention + hashtag highlighter
-  const rendered = content.replace(
-    /@(\w+)/g,
-    '<span class="pc-mention">@$1</span>'
-  );
-
   return (
     <div className="dp-content">
-      <p
-        className="dp-text"
-        dangerouslySetInnerHTML={{ __html: rendered }}
-      />
+      <p className="dp-text">
+        {renderContent(content)}
+      </p>
     </div>
   );
 }

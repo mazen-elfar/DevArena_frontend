@@ -499,6 +499,52 @@ export const MOCK_COMMENTS = {
   ],
 };
 
+// ─── Aliases for RightPanel Components ───────────────────────────────────────
+
+export const TRENDING_TOPICS = MOCK_TRENDING.map(t => ({
+  id: t.id,
+  tag: t.title.split('—')[0].trim().toLowerCase().replace(/[^a-z0-9]/g, ''),
+  title: t.title,
+  postsCount: t.engagement,
+  trend: t.trend,
+  isNew: parseInt(t.trend) > 20,
+}));
+
+export const TOP_DEVELOPERS = MOCK_TOP_DEVELOPERS.map(d => ({
+  id: d.id,
+  username: d.username,
+  displayName: d.displayName,
+  avatar: d.avatar,
+  rank: d.rank,
+  reputation: d.reputation,
+}));
+
+export const ONLINE_FRIENDS = MOCK_ONLINE_FRIENDS.map(f => ({
+  id: f.id,
+  username: f.username,
+  displayName: f.displayName,
+  avatar: f.avatar,
+  status: f.status,
+  statusColor: f.statusColor,
+}));
+
+export const SUGGESTED_DEVELOPERS = MOCK_SUGGESTIONS.map(s => ({
+  id: s.id,
+  username: s.username,
+  displayName: s.displayName,
+  avatar: s.avatar,
+  sharedSkills: s.sharedSkills,
+  reason: s.reason,
+  mutualsCount: Math.floor(Math.random() * 20) + 1,
+}));
+
+export const COMMUNITY_STATS = [
+  { id: 'stat_devs', label: 'Active Devs', value: MOCK_STATS.activeDevelopers.toLocaleString() },
+  { id: 'stat_posts', label: 'Posts Today', value: MOCK_STATS.postsToday.toLocaleString() },
+  { id: 'stat_battles', label: 'Battles Today', value: MOCK_STATS.battlesToday.toLocaleString() },
+  { id: 'stat_quests', label: 'Quests Done', value: MOCK_STATS.questsCompleted.toLocaleString() },
+];
+
 // ─── Navigation Structure ─────────────────────────────────────────────────────
 
 export const COMMUNITY_NAV = [

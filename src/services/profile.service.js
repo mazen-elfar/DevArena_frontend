@@ -10,6 +10,11 @@ export const getProfile = async (username) => {
   return res.data.data;
 };
 
+export const getMyProfile = async () => {
+  const res = await apiClient.get('/profile/me');
+  return res.data.data;
+};
+
 export const updateProfile = async (data) => {
   const res = await apiClient.patch('/profile', data);
   return res.data.data;

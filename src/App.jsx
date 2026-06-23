@@ -1,21 +1,11 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom';
 import { useEffect } from 'react';
-import Home from './pages/home/Home';
-import LandingPage from './pages/landing/LandingPage';
-import Community from './pages/community/Community';
-import AuthPage from './pages/auth/AuthPage';
-import ProtectedRoute from './components/auth/ProtectedRoute';
-import SocialCallback from './pages/auth/SocialCallback';
-import ProfileCompletionPage from './pages/onboarding/ProfileCompletionPage';
 import useAuthStore from './store/auth.store.js';
-
+import router from './router';
 
 function App() {
   const { initializeAuth, authInitialized } = useAuthStore();
 
-
-  // On every page load: validate the stored token and hydrate user state.
-  // This is what keeps the user logged in across page refreshes.
   useEffect(() => {
     initializeAuth();
   }, [initializeAuth]);
@@ -47,46 +37,7 @@ function App() {
     );
   }
 
-
-  return (
-    <Router>
-      <Routes>
-        {/* Public routes */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/auth" element={<AuthPage />} />
-        <Route path="/auth/callback" element={<SocialCallback />} />
-
-        {/* Protected routes */}
-        <Route path="/home" element={
-          <ProtectedRoute>
-            <Home />
-          </ProtectedRoute>
-        } />
-        <Route path="/community" element={
-          <ProtectedRoute>
-            <Community />
-          </ProtectedRoute>
-        } />
-        <Route path="/onboarding/profile" element={
-          <ProtectedRoute>
-            <ProfileCompletionPage />
-          </ProtectedRoute>
-        } />
-
-        {/* Future protected routes (stubs — add components as they're built) */}
-        {/* <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> */}
-        {/* <Route path="/quests" element={<ProtectedRoute><Quests /></ProtectedRoute>} /> */}
-        {/* <Route path="/battles" element={<ProtectedRoute><Battles /></ProtectedRoute>} /> */}
-        {/* <Route path="/tournaments" element={<ProtectedRoute><Tournaments /></ProtectedRoute>} /> */}
-        {/* <Route path="/leaderboards" element={<ProtectedRoute><Leaderboards /></ProtectedRoute>} /> */}
-        {/* <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} /> */}
-
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-
-      </Routes>
-    </Router>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
