@@ -108,8 +108,8 @@
     @apply bg-charcoal-bg text-on-surface font-body-md;
     margin: 0;
     padding: 0;
-    height: 100%;
-    overflow: hidden; /* Prevents outer scrollbar */
+    min-height: 100vh;
+    overflow-x: hidden;
   }
 }
 
