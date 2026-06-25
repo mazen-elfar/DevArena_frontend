@@ -130,7 +130,14 @@ const useAuthStore = create(
        */
       markProfileComplete: () =>
         set((state) => ({
-          user: state.user ? { ...state.user, profileCompleted: true } : state.user,
+          user: state.user
+            ? {
+                ...state.user,
+                profile: state.user.profile
+                  ? { ...state.user.profile, profileCompleted: true }
+                  : { profileCompleted: true },
+              }
+            : state.user,
         })),
 
       /**
@@ -236,6 +243,6 @@ const useAuthStore = create(
  * Usage: const isProfileComplete = useProfileComplete();
  */
 export const useProfileComplete = () =>
-  useAuthStore((s) => s.user?.profileCompleted ?? false);
+  useAuthStore((s) => s.user?.profile?.profileCompleted ?? false);
 
 export default useAuthStore;

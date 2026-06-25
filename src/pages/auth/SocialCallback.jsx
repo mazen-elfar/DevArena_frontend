@@ -32,12 +32,14 @@ const SocialCallback = () => {
 
     exchangeSocialCode(code)
       .then((data) => {
+        const isProfileComplete = data.user?.profile?.profileCompleted;
+        
         // Use the intended destination from location state OR onboarding OR home
-        let from = location.state?.from?.pathname || (data.user?.profileCompleted ? '/home' : '/onboarding/profile');
+        let from = location.state?.from?.pathname || (isProfileComplete ? '/home' : '/onboarding/profile');
         
         // Safety: Never redirect back to the auth page itself
         if (from === '/auth' || from === '/auth/callback') {
-          from = data.user?.profileCompleted ? '/home' : '/onboarding/profile';
+          from = isProfileComplete ? '/home' : '/onboarding/profile';
         }
 
         navigate(from, { replace: true });

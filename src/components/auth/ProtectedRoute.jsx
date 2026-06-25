@@ -68,7 +68,7 @@ export default function ProtectedRoute({ children }) {
 
   // 3. Profile Completion Lock:
   // If authenticated but profile is not complete, ONLY allow /onboarding/profile.
-  const isProfileComplete = user?.profileCompleted;
+  const isProfileComplete = user?.profile?.profileCompleted;
   const isOnboardingPath = location.pathname === '/onboarding/profile';
 
   if (!isProfileComplete && !isOnboardingPath) {

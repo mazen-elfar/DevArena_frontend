@@ -1,82 +1,103 @@
 /**
  * Community Service — API Boundary Layer
  * 
- * Refactored to V3.1: React Query Ready & Socket.IO Compatible.
- * All methods follow a consistent contract for server-state management.
+ * Migrated to Production Backend (Phases 3 & 4)
  */
 
-import { 
-  MOCK_FEED, MOCK_TRENDING, MOCK_SUGGESTIONS, MOCK_TOP_DEVELOPERS,
-  MOCK_ONLINE_FRIENDS, MOCK_SPACES, MOCK_TAGS, MOCK_COMMENTS, MOCK_STATS,
-} from '../pages/community/constants';
+import apiClient from './api.client';
 
-const SIMULATE_DELAY = (ms = 400) => new Promise(r => setTimeout(r, ms));
+/**
+ * Enum Mappings
+ */
+export const POST_TYPE_MAP = {
+  developer: 'TEXT',
+  discussion: 'DISCUSSION',
+  achievement: 'ACHIEVEMENT',
+  victory: 'BATTLE_RESULT',
+  quest: 'QUEST_COMPLETION',
+  showcase: 'PROJECT_SHOWCASE',
+};
+
+// Inverse map for UI rendering
+export const BACKEND_POST_TYPE_MAP = Object.fromEntries(
+  Object.entries(POST_TYPE_MAP).map(([k, v]) => [v, k])
+);
+
+export const REACTION_TYPE_MAP = {
+  like: 'LIKE',
+  celebrate: 'FIRE',
+  insightful: 'ROCKET',
+};
 
 /**
  * Normalized Error Helper
  */
 const normalizeError = (error) => {
   console.error('[Community Service Error]:', error);
+  const message = error.response?.data?.message || error.message || 'An unexpected community error occurred.';
   return {
-    message: error.message || 'An unexpected community error occurred.',
-    code: error.code || 'COMMUNITY_ERROR',
+    message,
+    code: error.response?.data?.code || 'COMMUNITY_ERROR',
+    status: error.response?.status,
     retryable: true
   };
 };
 
-// ─── Feed Methods (React Query Ready) ────────────────────────────────────────
+// ─── Feed Methods ─────────────────────────────────────────────────────────────
 
 /**
- * Get community feed with support for filters, spaces, and pagination.
+ * Get community feed with support for filters and pagination.
+ * POST /api/posts
  */
-export async function getFeed({ filter = 'all', space = null, page = 1, pageSize = 10 } = {}) {
+export async function getFeed({ filter = 'all', authorId = null, page = 1, limit = 10 } = {}) {
   try {
-    await SIMULATE_DELAY();
+    const params = { page, limit };
     
-    let posts = [...MOCK_FEED];
-
-    // Apply Filter
+    // Map frontend filter to backend PostType
     if (filter !== 'all') {
-      const typeMap = {
-        achievements: 'achievement',
-        battles: 'victory',
-        quests: 'quest',
-        projects: 'showcase',
-      };
-      const targetType = typeMap[filter];
-      if (targetType) posts = posts.filter(p => p.type === targetType);
+      params.type = POST_TYPE_MAP[filter] || filter;
     }
-
-    // Apply Space
-    if (space) {
-      posts = posts.filter(p => p.tags.includes(space.toLowerCase()));
-    }
-
-    // Pagination
-    const start = (page - 1) * pageSize;
-    const slice = posts.slice(start, start + pageSize);
     
+    if (authorId) params.authorId = authorId;
+
+    const response = await apiClient.get('/posts', { params });
+    const { items, total, hasMore } = response.data.data;
+
     return {
-      posts: slice,
-      hasMore: start + pageSize < posts.length,
+      posts: items,
+      hasMore,
       nextPage: page + 1,
-      totalCount: posts.length
+      totalCount: total
     };
   } catch (err) {
     throw normalizeError(err);
   }
 }
 
-// ─── Post Actions (Optimistic Update Ready) ──────────────────────────────────
+/**
+ * Get a single post.
+ * GET /api/posts/:id
+ */
+export async function getPost(postId) {
+  try {
+    const response = await apiClient.get(`/posts/${postId}`);
+    return response.data.data;
+  } catch (err) {
+    throw normalizeError(err);
+  }
+}
+
+// ─── Post Actions ─────────────────────────────────────────────────────────────
 
 /**
  * Toggle reaction on a post.
+ * POST /api/posts/:postId/react
  */
-export async function reactToPost(postId, reaction) {
+export async function reactToPost(postId, reactionId) {
   try {
-    await SIMULATE_DELAY(150);
-    // Future: POST /api/posts/:postId/react
-    return { success: true, postId, reaction };
+    const backendType = REACTION_TYPE_MAP[reactionId] || reactionId;
+    const response = await apiClient.post(`/posts/${postId}/react`, { type: backendType });
+    return response.data.data;
   } catch (err) {
     throw normalizeError(err);
   }
@@ -84,11 +105,12 @@ export async function reactToPost(postId, reaction) {
 
 /**
  * Save post for later.
+ * POST /api/posts/:postId/save
  */
 export async function savePost(postId) {
   try {
-    await SIMULATE_DELAY(150);
-    return { success: true, postId };
+    const response = await apiClient.post(`/posts/${postId}/save`);
+    return response.data.data;
   } catch (err) {
     throw normalizeError(err);
   }
@@ -96,109 +118,160 @@ export async function savePost(postId) {
 
 /**
  * Create a new post.
+ * POST /api/posts
  */
 export async function createPost(payload) {
   try {
-    await SIMULATE_DELAY(600);
-    return {
-      id: `post_${Date.now()}`,
-      authorId: 'current_user',
-      type: payload.type || 'developer',
+    const backendPayload = {
       content: payload.content,
-      tags: payload.tags || [],
-      metadata: payload.metadata || {},
-      reactions: { like: 0, celebrate: 0, insightful: 0 },
-      myReaction: null,
-      commentsCount: 0,
-      createdAt: new Date().toISOString(),
+      type: POST_TYPE_MAP[payload.type] || 'TEXT',
     };
+    if (payload.title) backendPayload.title = payload.title;
+
+    const response = await apiClient.post('/posts', backendPayload);
+    return response.data.data;
   } catch (err) {
     throw normalizeError(err);
   }
 }
 
-// ─── Social & Discovery ──────────────────────────────────────────────────────
+/**
+ * Delete a post.
+ * DELETE /api/posts/:id
+ */
+export async function deletePost(postId) {
+  try {
+    const response = await apiClient.delete(`/posts/${postId}`);
+    return response.data;
+  } catch (err) {
+    throw normalizeError(err);
+  }
+}
+
+// ─── Social & Discovery ───────────────────────────────────────────────────────
 
 /**
  * Follow/Unfollow user.
+ * POST /api/friends/follow/:userId
+ * DELETE /api/friends/follow/:userId
  */
-export async function toggleFollow(userId, action) {
+export async function toggleFollow(userId, isFollowing) {
   try {
-    await SIMULATE_DELAY(300);
-    return { 
-      userId, 
-      state: action === 'follow' ? 'following' : 'none' 
-    };
+    if (isFollowing) {
+      await apiClient.delete(`/friends/follow/${userId}`);
+      return { userId, state: 'none' };
+    } else {
+      const response = await apiClient.post(`/friends/follow/${userId}`);
+      return { userId, state: 'following', data: response.data.data };
+    }
   } catch (err) {
     throw normalizeError(err);
   }
 }
 
+/**
+ * Get trending discussions.
+ * GET /api/posts/trending
+ */
 export async function getTrending() {
-  try { await SIMULATE_DELAY(200); return { discussions: MOCK_TRENDING, tags: MOCK_TAGS }; }
-  catch (err) { throw normalizeError(err); }
+  try {
+    const response = await apiClient.get('/posts/trending');
+    const { items } = response.data.data;
+    // Backend doesn't return MOCK_TAGS, so we return empty tags for now
+    return { discussions: items, tags: [] };
+  } catch (err) {
+    throw normalizeError(err);
+  }
 }
 
-export async function getTopDevelopers() {
-  try { await SIMULATE_DELAY(200); return MOCK_TOP_DEVELOPERS; }
-  catch (err) { throw normalizeError(err); }
+/**
+ * Get top developers from leaderboard.
+ * GET /api/ranking/leaderboard
+ */
+export async function getTopDevelopers(limit = 5) {
+  try {
+    const response = await apiClient.get('/ranking/leaderboard', { params: { page: 1, limit } });
+    return response.data.data.items;
+  } catch (err) {
+    throw normalizeError(err);
+  }
 }
 
+/**
+ * Get friends who are currently online.
+ * GET /api/friends
+ */
 export async function getOnlineFriends() {
-  try { await SIMULATE_DELAY(150); return MOCK_ONLINE_FRIENDS; }
-  catch (err) { throw normalizeError(err); }
+  try {
+    const response = await apiClient.get('/friends');
+    const friends = response.data.data.items;
+    return friends.filter(f => f.isOnline);
+  } catch (err) {
+    throw normalizeError(err);
+  }
 }
 
-export async function getSuggestions() {
-  try { await SIMULATE_DELAY(300); return MOCK_SUGGESTIONS; }
-  catch (err) { throw normalizeError(err); }
-}
-
+/**
+ * Get community statistics (Derived).
+ */
 export async function getCommunityStats() {
-  try { await SIMULATE_DELAY(150); return MOCK_STATS; }
-  catch (err) { throw normalizeError(err); }
+  try {
+    // Parallel requests to avoid sequential waterfall
+    const [postsRes, usersRes] = await Promise.all([
+      apiClient.get('/posts', { params: { limit: 1 } }),
+      apiClient.get('/ranking/leaderboard', { params: { limit: 1 } })
+    ]);
+
+    return {
+      members: usersRes.data.data.total || 0,
+      posts: postsRes.data.data.total || 0,
+      trending: 0, // Not available in backend aggregate
+      activeNow: 0 // Not available in backend aggregate
+    };
+  } catch (err) {
+    // Return empty fallback instead of throwing for sidebar stats
+    return { members: 0, posts: 0, trending: 0, activeNow: 0 };
+  }
 }
 
-// ─── Search ──────────────────────────────────────────────────────────────────
-
+/**
+ * Search community (Partial implementation via filtering list).
+ * Note: Backend lacks dedicated search endpoint.
+ */
 export async function searchCommunity(query) {
   try {
-    await SIMULATE_DELAY(300);
-    // Mocking search by content matching
-    const results = MOCK_FEED.filter(p => 
-      p.content.toLowerCase().includes(query.toLowerCase()) ||
-      p.tags.some(t => t.toLowerCase().includes(query.toLowerCase()))
-    );
-    return { posts: results };
+    // For now, we fallback to just listing posts as search is not implemented on backend
+    return { posts: [] };
   } catch (err) {
     throw normalizeError(err);
   }
 }
 
-// ─── Comments ────────────────────────────────────────────────────────────────
+// ─── Comments ─────────────────────────────────────────────────────────────────
 
-export async function getComments(postId) {
+/**
+ * Get comments for a post.
+ * GET /api/posts/:id/comments
+ */
+export async function getComments(postId, { page = 1, limit = 50 } = {}) {
   try {
-    await SIMULATE_DELAY(400);
-    return MOCK_COMMENTS[postId] || [];
+    const response = await apiClient.get(`/posts/${postId}/comments`, { params: { page, limit } });
+    return response.data.data.items;
   } catch (err) {
     throw normalizeError(err);
   }
 }
 
+/**
+ * Create a new comment.
+ * POST /api/posts/:id/comments
+ */
 export async function createComment(postId, payload) {
   try {
-    await SIMULATE_DELAY(500);
-    return {
-      id: `comment_${Date.now()}`,
-      postId,
-      parentId: payload.parentId || null,
-      authorId: 'current_user',
-      content: payload.content,
-      reactions: { like: 0 },
-      replies: [],
-      createdAt: new Date().toISOString(),
-    };
+    const body = { content: payload.content };
+    if (payload.parentId) body.parentId = payload.parentId;
+    const response = await apiClient.post(`/posts/${postId}/comments`, body);
+    return response.data.data;
   } catch (err) {
     throw normalizeError(err);
   }

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { COMMUNITY_NAV, MOCK_SPACES, RANK_CONFIG } from '../../constants';
+import React from 'react';
+import { COMMUNITY_NAV, RANK_CONFIG } from '../../constants';
 import './CommunitySidebar.css';
 
 function NavItem({ item, isActive, onClick }) {
@@ -19,9 +19,6 @@ function NavItem({ item, isActive, onClick }) {
 }
 
 export function CommunitySidebar({ activeSection, onSectionChange, currentUser }) {
-  const [spacesExpanded, setSpacesExpanded] = useState(false);
-  const displayedSpaces = spacesExpanded ? MOCK_SPACES : MOCK_SPACES.slice(0, 4);
-
   const rankCfg = currentUser ? (RANK_CONFIG[currentUser.rank] || RANK_CONFIG.Bronze) : null;
 
   return (
@@ -48,28 +45,6 @@ export function CommunitySidebar({ activeSection, onSectionChange, currentUser }
           </div>
         ))}
       </nav>
-
-      {/* Dev Spaces */}
-      <div className="cs-spaces-block">
-        <div className="cs-spaces-header">
-          <span className="cs-section-label">Dev Spaces</span>
-          <button
-            className="cs-spaces-toggle"
-            onClick={() => setSpacesExpanded(v => !v)}
-          >
-            {spacesExpanded ? 'less' : 'more'}
-          </button>
-        </div>
-        <div className="cs-spaces-list">
-          {displayedSpaces.map(space => (
-            <button key={space.id} className="cs-space-item">
-              <span className="cs-space-icon" style={{ color: space.color }}>{space.icon}</span>
-              <span className="cs-space-name">{space.name}</span>
-              <span className="cs-space-count">{space.postsToday}</span>
-            </button>
-          ))}
-        </div>
-      </div>
 
       {/* Developer Identity Card */}
       {currentUser && (

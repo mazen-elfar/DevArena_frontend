@@ -26,17 +26,42 @@ const ProfileCompletionPage = () => {
   const { user, markProfileComplete } = useAuthStore();
 
   const [form, setForm] = useState({
-    username: user?.username ?? '',
-    major: '',
-    region: '',
-    bio: '',
+    username: user?.profile?.username ?? '',
+    major: user?.profile?.major ?? '',
+    region: user?.profile?.region ?? '',
+    bio: user?.profile?.bio ?? '',
+    avatar: user?.profile?.avatar ?? '',
   });
+  const [avatarPreview, setAvatarPreview] = useState(user?.profile?.avatar ?? null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const fileInputRef = React.useRef(null);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     setError(null);
+  };
+
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      setError('Image must be less than 2MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatarPreview(reader.result);
+      setForm(prev => ({ ...prev, avatar: reader.result }));
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
@@ -44,8 +69,13 @@ const ProfileCompletionPage = () => {
     setLoading(true);
     setError(null);
     try {
-      await apiClient.patch('/profile/onboarding', form);
-      markProfileComplete();
+      const res = await apiClient.patch('/profile/onboarding', form);
+      const updatedUser = res.data.data;
+      
+      // Update global auth state with the fresh user object 
+      // which now includes profile.profileCompleted = true
+      useAuthStore.getState().setUser(updatedUser);
+      
       navigate('/home', { replace: true });
     } catch (err) {
       setError(err.response?.data?.message ?? 'Something went wrong. Please try again.');
@@ -64,13 +94,27 @@ const ProfileCompletionPage = () => {
         <div className="onboarding-card glass-card">
           {/* Header */}
           <div className="onboarding-header">
-            <div className="onboarding-avatar">
-              {user?.avatarUrl ? (
-                <img src={user.avatarUrl} alt="Avatar" />
+            <div 
+              className="onboarding-avatar clickable" 
+              onClick={handleAvatarClick}
+              title="Click to change avatar"
+            >
+              {avatarPreview ? (
+                <img src={avatarPreview} alt="Avatar" />
               ) : (
                 <span className="material-symbols-outlined">person</span>
               )}
+              <div className="avatar-overlay">
+                <span className="material-symbols-outlined">photo_camera</span>
+              </div>
             </div>
+            <input 
+              type="file"
+              ref={fileInputRef}
+              style={{ display: 'none' }}
+              accept="image/*"
+              onChange={handleFileChange}
+            />
             <h1 className="onboarding-title">One Last Step</h1>
             <p className="onboarding-subtitle">
               Set up your arena profile to begin competing.

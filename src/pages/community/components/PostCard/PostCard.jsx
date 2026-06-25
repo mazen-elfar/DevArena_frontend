@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { RANK_CONFIG, POST_TYPE_CONFIG } from '../../constants';
+import { BACKEND_POST_TYPE_MAP } from '../../../../services/community.service';
 import useCommunityStore from '../../community.store';
 import { PostActions } from './PostActions';
 import { CommentsSection } from './CommentsSection';
@@ -20,6 +21,14 @@ function timeAgo(isoString) {
   return `${Math.floor(h / 24)}d ago`;
 }
 
+function getRankFromReputation(rep = 0) {
+  if (rep >= 10000) return 'Diamond';
+  if (rep >= 5000) return 'Platinum';
+  if (rep >= 2500) return 'Gold';
+  if (rep >= 1000) return 'Silver';
+  return 'Bronze';
+}
+
 const POST_RENDERERS = {
   developer: DeveloperPost,
   discussion: DeveloperPost,
@@ -30,10 +39,12 @@ const POST_RENDERERS = {
 };
 
 export function PostCard({ post }) {
-  const { author, type, createdAt } = post;
+  const { author, type: backendType, createdAt } = post;
   const [showOptions, setShowOptions] = useState(false);
 
-  const rankCfg = RANK_CONFIG[author?.rank] || RANK_CONFIG.Bronze;
+  const type = BACKEND_POST_TYPE_MAP[backendType] || 'developer';
+  const rankName = author?.rank || getRankFromReputation(author?.reputation);
+  const rankCfg = RANK_CONFIG[rankName] || RANK_CONFIG.Bronze;
   const typeCfg = POST_TYPE_CONFIG[type] || POST_TYPE_CONFIG.developer;
   const Renderer = POST_RENDERERS[type] || DeveloperPost;
 

@@ -18,7 +18,7 @@ const AccessGuard = ({
   const location = useLocation();
 
   if (!authInitialized) {
-    return null; // Or a consistent loading spinner
+    return null;
   }
 
   // 1. Check Authentication
@@ -27,7 +27,9 @@ const AccessGuard = ({
   }
 
   // 2. Check Profile Completion
-  if (requireProfileCompletion && isAuthenticated && !user?.profileCompleted) {
+  const isProfileComplete = user?.profile?.profileCompleted;
+  
+  if (requireProfileCompletion && isAuthenticated && !isProfileComplete) {
     return <Navigate to="/onboarding/profile" replace />;
   }
 

@@ -16,11 +16,12 @@ const AuthPage = () => {
   // If already authenticated, redirect away from auth page
   useEffect(() => {
     if (isAuthenticated && user) {
-      let from = location.state?.from?.pathname || (user.profileCompleted ? '/home' : '/onboarding/profile');
+      const isProfileComplete = user?.profile?.profileCompleted;
+      let from = location.state?.from?.pathname || (isProfileComplete ? '/home' : '/onboarding/profile');
       
       // Safety: Never redirect back to the auth page itself
       if (from === '/auth' || from === '/auth/callback') {
-        from = user.profileCompleted ? '/home' : '/onboarding/profile';
+        from = isProfileComplete ? '/home' : '/onboarding/profile';
       }
 
       navigate(from, { replace: true });
@@ -47,11 +48,12 @@ const AuthPage = () => {
         : await register({ username: form.username, email: form.email, password: form.password });
       
       // Determine where to go
-      let from = location.state?.from?.pathname || (data.user.profileCompleted ? '/home' : '/onboarding/profile');
+      const isProfileComplete = data.user?.profile?.profileCompleted;
+      let from = location.state?.from?.pathname || (isProfileComplete ? '/home' : '/onboarding/profile');
       
       // Safety: Never redirect back to the auth page itself
       if (from === '/auth' || from === '/auth/callback') {
-        from = data.user.profileCompleted ? '/home' : '/onboarding/profile';
+        from = isProfileComplete ? '/home' : '/onboarding/profile';
       }
 
       navigate(from, { replace: true });

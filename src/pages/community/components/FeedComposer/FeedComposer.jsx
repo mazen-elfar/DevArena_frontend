@@ -38,15 +38,15 @@ export function FeedComposer({ currentUser }) {
     setSubmitting(true);
     try {
       await submitPost({
-        type: composerType,
         content,
-        tags: selectedTags.map(t => t.toLowerCase()),
-        visibility: 'public',
-        metadata: {},
+        type: composerType
       });
       setContent('');
       setSelectedTags([]);
       setExpanded(false);
+    } catch (err) {
+      console.error('Failed to submit post:', err);
+      // Optional: Add toast notification here
     } finally {
       setSubmitting(false);
     }

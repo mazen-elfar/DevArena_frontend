@@ -23,11 +23,7 @@ export function CommunitySearch() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const hasResults = searchResults && (
-    searchResults.tags?.length > 0 ||
-    searchResults.spaces?.length > 0 ||
-    searchResults.developers?.length > 0
-  );
+  const hasResults = searchResults?.posts?.length > 0;
 
   return (
     <div className="csearch-wrap" ref={wrapRef}>
@@ -60,28 +56,15 @@ export function CommunitySearch() {
             <div className="csearch-empty">No results for "<strong>{searchQuery}</strong>"</div>
           )}
 
-          {!searchLoading && searchResults?.tags?.length > 0 && (
+          {!searchLoading && hasResults && (
             <div className="csearch-group">
-              <p className="csearch-group-label">Tags</p>
-              {searchResults.tags.map(tag => (
-                <button key={tag.id} className="csearch-result-item">
-                  <span style={{ color: tag.color }}>{tag.icon}</span>
-                  <span className="csearch-result-name">#{tag.name}</span>
-                  <span className="csearch-result-meta">{tag.followersCount.toLocaleString()} followers</span>
-                </button>
-              ))}
-            </div>
-          )}
-
-          {!searchLoading && searchResults?.spaces?.length > 0 && (
-            <div className="csearch-group">
-              <p className="csearch-group-label">Spaces</p>
-              {searchResults.spaces.map(space => (
-                <button key={space.id} className="csearch-result-item">
-                  <span>{space.icon}</span>
-                  <span className="csearch-result-name">{space.name}</span>
-                  <span className="csearch-result-meta">{space.members.toLocaleString()} devs</span>
-                </button>
+              <p className="csearch-group-label">Posts</p>
+              {searchResults.posts.map(post => (
+                <a key={post.id} href={`#post-${post.id}`} className="csearch-result-item">
+                  <span className="material-symbols-outlined" style={{ fontSize: 16, color: '#818cf8' }}>article</span>
+                  <span className="csearch-result-name">{post.title || post.content?.substring(0, 50) || 'Untitled'}</span>
+                  <span className="csearch-result-meta">{post.author?.username}</span>
+                </a>
               ))}
             </div>
           )}

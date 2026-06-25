@@ -1,9 +1,7 @@
 /**
  * Community Store — Zustand
  *
- * Scalable state management for the DevArena social ecosystem.
- * Architected for Socket.IO readiness and Optimistic Updates.
- * Refactored to V3.1 strict schema.
+ * Migrated to Production Backend (Phases 3 & 4)
  */
 
 import { create } from 'zustand';
@@ -13,20 +11,23 @@ const useCommunityStore = create((set, get) => ({
   // ─── State ───────────────────────────────────────────────────
   feed: [],
   activeFilter: 'all',
-  selectedSpace: null,
   searchQuery: '',
+  searchResults: null,
+  searchLoading: false,
   hasMore: true,
   isLoading: false,
+  composerType: 'developer', // Default composer type
 
-  // Records for O(1) lookups
-  followStates: {},      // { [userId]: 'follow' | 'following' | 'requested' }
+  // UI state records
+  followStates: {},      // { [userId]: 'follow' | 'following' }
   expandedComments: {},  // { [postId]: boolean }
-  activeReactions: {},   // { [postId]: 'like' | 'celebrate' | 'insightful' | null }
+  myReactions: {},       // { [postId]: 'LIKE' | 'FIRE' | 'ROCKET' | null }
+  savedPosts: {},        // { [postId]: boolean }
 
-  // ─── Actions ──────────────────────────────────────────────────
+  // ─── Feed Actions ─────────────────────────────────────────────
 
   /**
-   * Set the primary feed filter (Trending, Following, etc.)
+   * Set the primary feed filter
    */
   setFilter: async (filter) => {
     set({ activeFilter: filter, isLoading: true, feed: [], hasMore: true });
@@ -43,51 +44,16 @@ const useCommunityStore = create((set, get) => ({
   },
 
   /**
-   * Filter feed by developer space
-   */
-  setSpace: async (spaceId) => {
-    set({ selectedSpace: spaceId, isLoading: true, feed: [], hasMore: true });
-    try {
-      const result = await communityService.getFeed({ space: spaceId, page: 1 });
-      set({
-        feed: result.posts,
-        hasMore: result.hasMore,
-        isLoading: false,
-      });
-    } catch (err) {
-      set({ isLoading: false });
-    }
-  },
-
-  /**
-   * Global community search
-   */
-  setSearch: async (query) => {
-    set({ searchQuery: query });
-    if (!query.trim()) return;
-
-    set({ isLoading: true });
-    try {
-      const results = await communityService.searchCommunity(query);
-      // For simplicity, search results replace the current feed in this view
-      set({ feed: results.posts || [], hasMore: false, isLoading: false });
-    } catch {
-      set({ isLoading: false });
-    }
-  },
-
-  /**
-   * Pagination: Append more posts to the end of the current feed
+   * Pagination: Load next page
    */
   appendFeed: async (page) => {
-    const { activeFilter, selectedSpace, feed, isLoading, hasMore } = get();
+    const { activeFilter, feed, isLoading, hasMore } = get();
     if (isLoading || !hasMore) return;
 
     set({ isLoading: true });
     try {
       const result = await communityService.getFeed({ 
         filter: activeFilter, 
-        space: selectedSpace, 
         page 
       });
       set({
@@ -101,87 +67,157 @@ const useCommunityStore = create((set, get) => ({
   },
 
   /**
-   * Socket.IO / Force Refresh: Replace entire feed
+   * Set the current composer type (Status, Discussion, etc.)
    */
-  replaceFeed: (posts) => set({ feed: posts, hasMore: true }),
+  setComposerType: (type) => set({ composerType: type }),
 
   /**
-   * Optimistic Reaction Logic
+   * Submit a new post
    */
-  toggleReaction: async (postId, reaction) => {
-    const { feed, activeReactions } = get();
-    const currentReaction = activeReactions[postId] || null;
-    const newReaction = currentReaction === reaction ? null : reaction;
+  submitPost: async (payload) => {
+    const { composerType, feed } = get();
+    set({ isLoading: true });
 
-    // 1. Optimistic Update
+    try {
+      const newPost = await communityService.createPost({
+        ...payload,
+        type: payload.type || composerType
+      });
+
+      // Prepend to feed immediately
+      set({ 
+        feed: [newPost, ...feed],
+        isLoading: false 
+      });
+      return newPost;
+    } catch (err) {
+      set({ isLoading: false });
+      throw err;
+    }
+  },
+
+  // ─── Post Actions ─────────────────────────────────────────────
+
+  /**
+   * Add a comment to a post
+   */
+  addComment: async (postId, content, parentId = null) => {
+    try {
+      const comment = await communityService.createComment(postId, { content, parentId });
+      
+      // Update the comment count in the feed item
+      set(state => ({
+        feed: state.feed.map(post => 
+          post.id === postId 
+            ? { ...post, commentCount: (post.commentCount || 0) + 1 } 
+            : post
+        )
+      }));
+      
+      return comment;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  /**
+   * Toggle reaction with total reactionCount logic
+   */
+  toggleReaction: async (postId, reactionId) => {
+    const { feed, myReactions } = get();
+    const currentReaction = myReactions[postId] || null;
+    const targetReaction = communityService.REACTION_TYPE_MAP[reactionId];
+    const isSame = currentReaction === targetReaction;
+    const nextReaction = isSame ? null : targetReaction;
+
+    // 1. Optimistic Update (Total reactionCount)
     const prevFeed = [...feed];
     const newFeed = feed.map(post => {
       if (post.id !== postId) return post;
       
-      const reactions = { ...post.reactions };
-      if (currentReaction) {
-        reactions[currentReaction] = Math.max(0, (reactions[currentReaction] || 0) - 1);
-      }
-      if (newReaction) {
-        reactions[newReaction] = (reactions[newReaction] || 0) + 1;
-      }
+      let newCount = post.reactionCount || 0;
+      if (currentReaction && !nextReaction) newCount = Math.max(0, newCount - 1);
+      if (!currentReaction && nextReaction) newCount = newCount + 1;
+      // If switching types, count stays the same
       
-      return { ...post, reactions, myReaction: newReaction };
+      return { ...post, reactionCount: newCount };
     });
 
     set({ 
       feed: newFeed, 
-      activeReactions: { ...activeReactions, [postId]: newReaction } 
+      myReactions: { ...myReactions, [postId]: nextReaction } 
     });
 
     // 2. Network Call
     try {
-      await communityService.reactToPost(postId, newReaction);
+      await communityService.reactToPost(postId, reactionId);
     } catch {
-      // 3. Rollback on failure
+      // 3. Rollback
       set({ 
         feed: prevFeed, 
-        activeReactions: { ...activeReactions, [postId]: currentReaction } 
+        myReactions: { ...myReactions, [postId]: currentReaction } 
       });
     }
   },
 
   /**
-   * Optimistic Save Logic
+   * Toggle save post
    */
   toggleSave: async (postId) => {
-    set(state => ({
-      feed: state.feed.map(p => p.id === postId ? { ...p, savedByMe: !p.savedByMe } : p)
-    }));
-    await communityService.savePost(postId);
-  },
+    const { feed, savedPosts } = get();
+    const isSaved = !!savedPosts[postId];
 
-  /**
-   * Optimistic Follow Logic
-   */
-  toggleFollow: async (userId) => {
-    const current = get().followStates[userId] || 'follow';
-    const next = current === 'following' || current === 'requested' ? 'follow' : 'following';
-
+    // Optimistic
     set(state => ({
-      followStates: { ...state.followStates, [userId]: next }
+      savedPosts: { ...state.savedPosts, [postId]: !isSaved },
+      feed: state.feed.map(p => 
+        p.id === postId 
+          ? { ...p, saveCount: isSaved ? Math.max(0, (p.saveCount || 0) - 1) : (p.saveCount || 0) + 1 } 
+          : p
+      )
     }));
 
     try {
-      const result = await communityService.toggleFollow(userId, next === 'following' ? 'follow' : 'unfollow');
-      set(state => ({
-        followStates: { ...state.followStates, [userId]: result.state }
-      }));
+      await communityService.savePost(postId);
     } catch {
+      // Rollback
       set(state => ({
-        followStates: { ...state.followStates, [userId]: current }
+        savedPosts: { ...state.savedPosts, [postId]: isSaved },
+        feed: state.feed.map(p => 
+          p.id === postId 
+            ? { ...p, saveCount: isSaved ? (p.saveCount || 0) : Math.max(0, (p.saveCount || 0) - 1) } 
+            : p
+        )
       }));
     }
   },
 
   /**
-   * Toggle Comments Section (Store-driven expansion)
+   * Follow/Unfollow user
    */
+  toggleFollow: async (userId) => {
+    const { followStates } = get();
+    const isFollowing = followStates[userId] === 'following';
+
+    // Optimistic
+    set(state => ({
+      followStates: { ...state.followStates, [userId]: isFollowing ? 'follow' : 'following' }
+    }));
+
+    try {
+      const result = await communityService.toggleFollow(userId, isFollowing);
+      set(state => ({
+        followStates: { ...state.followStates, [userId]: result.state }
+      }));
+    } catch {
+      set(state => ({
+        followStates: { ...state.followStates, [userId]: isFollowing ? 'following' : 'follow' }
+      }));
+    }
+  },
+
+  // ─── UI Helpers ──────────────────────────────────────────────
+
   toggleComments: (postId) => {
     set(state => ({
       expandedComments: { 
@@ -191,22 +227,36 @@ const useCommunityStore = create((set, get) => ({
     }));
   },
 
-  /**
-   * Reset feed state (e.g., when leaving community tab)
-   */
+  setSearch: async (query) => {
+    set({ searchQuery: query });
+    if (!query.trim()) {
+      set({ searchResults: null, searchLoading: false });
+      return;
+    }
+    set({ searchLoading: true });
+    try {
+      const results = await communityService.searchCommunity(query);
+      set({ searchResults: results, searchLoading: false });
+    } catch {
+      set({ searchResults: null, searchLoading: false });
+    }
+  },
+
   resetFeed: () => set({ 
     feed: [], 
     activeFilter: 'all', 
-    selectedSpace: null, 
-    hasMore: true 
+    hasMore: true,
+    isLoading: false,
+    searchQuery: '',
+    searchResults: null,
+    searchLoading: false,
+    expandedComments: {},
+    myReactions: {},
+    savedPosts: {}
   }),
 
-  // ─── Socket Helpers ──────────────────────────────────────────
-
-  prependPost: (post) => set(state => ({
-    feed: [post, ...state.feed]
-  })),
-
+  // Socket updates
+  prependPost: (post) => set(state => ({ feed: [post, ...state.feed] })),
   updatePostInFeed: (postId, updates) => set(state => ({
     feed: state.feed.map(p => p.id === postId ? { ...p, ...updates } : p)
   })),
