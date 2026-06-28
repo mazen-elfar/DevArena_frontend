@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { COMMUNITY_NAV, RANK_CONFIG } from '../../constants';
 import './CommunitySidebar.css';
 
@@ -19,6 +20,7 @@ function NavItem({ item, isActive, onClick }) {
 }
 
 export function CommunitySidebar({ activeSection, onSectionChange, currentUser }) {
+  const navigate = useNavigate();
   const rankCfg = currentUser ? (RANK_CONFIG[currentUser.rank] || RANK_CONFIG.Bronze) : null;
 
   return (
@@ -28,6 +30,17 @@ export function CommunitySidebar({ activeSection, onSectionChange, currentUser }
         <span className="cs-brand-icon">⚡</span>
         <span className="cs-brand-name">Community</span>
       </div>
+
+      {/* Back to Home Button */}
+      <button
+        onClick={() => navigate('/home')}
+        className="cs-nav-item"
+        style={{ margin: '0 0 8px 0' }}
+        title="Back to Home"
+      >
+        <span className="material-symbols-outlined cs-nav-icon">arrow_back</span>
+        <span className="cs-nav-label">Back to Home</span>
+      </button>
 
       {/* Navigation Sections */}
       <nav className="cs-nav">

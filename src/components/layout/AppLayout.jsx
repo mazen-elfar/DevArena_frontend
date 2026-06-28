@@ -11,7 +11,7 @@ const AppLayout = () => {
   }, [location.pathname, generateBreadcrumbs]);
 
   return (
-    <div className="w-screen h-screen overflow-hidden bg-[#02040a]">
+    <div className="w-screen h-screen overflow-y-auto overflow-x-hidden bg-[#02040a]">
       <Outlet />
     </div>
   );

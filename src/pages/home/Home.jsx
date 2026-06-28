@@ -169,7 +169,7 @@ export default function Home() {
         activeTab={activeTab} 
         setActiveTab={setActiveTab}
         onUpgradeClick={() => toggleModal('upgrade', true)}
-        onProfileClick={() => toggleModal('profile', true)}
+        onProfileClick={() => navigate('/profile')}
       />
 
       <main className="flex-1 ml-64 overflow-y-auto main-wrapper scroll-smooth">

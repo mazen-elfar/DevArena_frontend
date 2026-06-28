@@ -1,28 +1,37 @@
+import React from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { 
-  Sparkles, Trophy, Flame, Swords, Home as HomeIcon, ClipboardList, 
-  Crown, GitFork, Users2, Brain, Gem, Grid, Settings, Zap, LogOut 
+  Sparkles, Trophy, Swords, Home as HomeIcon, ClipboardList, 
+  Crown, GitFork, Users2, Brain, Gem, Grid, Settings, Zap, LogOut, User 
 } from "lucide-react";
 import useAuthStore from "../../../../store/auth.store";
-
+import * as profileService from "../../../../services/profile.service";
 
 /**
  * Sidebar Component - CRITICAL: This is the main application sidebar.
- * DO NOT CHANGE its core structure or position as per user architectural requirements.
- * 
- * @param {Object} props
- * @param {Object} props.userStats 
- * @param {string} props.activeTab
- * @param {Function} props.setActiveTab
- * @param {Function} props.onUpgradeClick
- * @param {Function} props.onProfileClick
  */
-export function Sidebar({ userStats, activeTab, setActiveTab, onUpgradeClick, onProfileClick }) {
+export function Sidebar({ activeTab, setActiveTab, onUpgradeClick }) {
   const navigate = useNavigate();
-  const { logout } = useAuthStore();
-  const menuItems = [
+  const location = useLocation();
+  const { user, logout } = useAuthStore();
+  
+  // Real-time fetching of user profile and stats
+  const { data: profile } = useQuery({
+    queryKey: ['profile', user?.username],
+    queryFn: () => profileService.getProfile(user?.username),
+    enabled: !!user?.username,
+  });
 
+  const { data: stats } = useQuery({
+    queryKey: ['stats', profile?.id],
+    queryFn: () => profileService.getStatistics(profile.id),
+    enabled: !!profile?.id,
+  });
+
+  const menuItems = [
     { id: "home", label: "Home", icon: HomeIcon, path: "/home" },
+    { id: "profile", label: "Profile", icon: User, path: "/profile" },
     { id: "tournaments", label: "Tournaments", icon: Trophy, path: "/tournaments" },
     { id: "battles", label: "Battles", icon: Swords, path: "/battles" },
     { id: "quests", label: "Quests", icon: ClipboardList, path: "/quests" },
@@ -40,7 +49,7 @@ export function Sidebar({ userStats, activeTab, setActiveTab, onUpgradeClick, on
   ];
 
   const handleNavClick = (item) => {
-    setActiveTab(item.id);
+    if (setActiveTab) setActiveTab(item.id);
     if (item.path) {
       navigate(item.path);
     }
@@ -51,6 +60,22 @@ export function Sidebar({ userStats, activeTab, setActiveTab, onUpgradeClick, on
     navigate('/auth');
   };
 
+  // Determine active item based on current path if activeTab isn't provided/reliable
+  const currentPath = location.pathname;
+  const isNavActive = (path) => currentPath === path || (path !== '/home' && currentPath.startsWith(path));
+
+  // Default values while loading or in fallback
+  const displayUser = {
+    username: profile?.username || user?.username || 'Dev',
+    avatar: profile?.avatar || 'https://via.placeholder.com/150',
+    level: profile?.level || 1,
+    xp: Number(profile?.currentXP || 0),
+    maxXp: Number(profile?.totalXP || 1000),
+    title: profile?.rank || 'Novice',
+    battlesWon: stats?.battleWins || 0,
+    winRate: stats?.winRate || 0,
+    globalRank: profile?.globalRank || '?'
+  };
 
   return (
     <aside className="w-64 bg-surface-dim border-r border-outline-variant flex flex-col justify-between h-screen fixed top-0 left-0 z-20 overflow-y-auto font-sans sidebar-container">
@@ -69,7 +94,7 @@ export function Sidebar({ userStats, activeTab, setActiveTab, onUpgradeClick, on
         <ul className="space-y-1.5">
           {menuItems.map((item) => {
             const Icon = item.icon;
-            const isActive = activeTab === item.id;
+            const isActive = activeTab === item.id || isNavActive(item.path);
             return (
               <li key={item.id}>
                 <button
@@ -96,7 +121,7 @@ export function Sidebar({ userStats, activeTab, setActiveTab, onUpgradeClick, on
             return (
               <li key={item.id}>
                 <button
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => setActiveTab && setActiveTab(item.id)}
                   id={`nav-${item.id}`}
                   className={`w-full flex items-center gap-3.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 nav-button ${
                     isActive ? "active" : ""
@@ -120,27 +145,26 @@ export function Sidebar({ userStats, activeTab, setActiveTab, onUpgradeClick, on
         </ul>
       </div>
 
-
       <div className="p-4 space-y-4">
         <div 
-          onClick={onProfileClick}
+          onClick={() => navigate('/profile')}
           className="p-4 bg-[#090d16] rounded-2xl border border-[#1e294b]/40 shadow-xl cursor-pointer hover:border-[#3b82f6]/40 transition-all duration-300 group profile-card"
         >
           <div className="flex items-center gap-3">
             <div className="relative">
               <div className="w-12 h-12 rounded-xl overflow-hidden border-2 border-indigo-500/40 p-0.5 group-hover:border-indigo-400 transition-colors">
-                <img src={userStats.avatar} alt={userStats.username} className="w-full h-full object-cover rounded-lg" referrerPolicy="no-referrer" />
+                <img src={displayUser.avatar} alt={displayUser.username} className="w-full h-full object-cover rounded-lg" referrerPolicy="no-referrer" />
               </div>
               <div className="absolute -bottom-1 -right-1 bg-indigo-500 text-white rounded-full text-[10px] font-bold px-1">GM</div>
             </div>
             <div className="min-w-0 flex-1 text-left">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold text-white truncate">{userStats.username}</p>
-                <span className="text-[10px] text-indigo-400 font-mono font-bold">Lv.{userStats.level}</span>
+                <p className="text-sm font-semibold text-white truncate">{displayUser.username}</p>
+                <span className="text-[10px] text-indigo-400 font-mono font-bold">Lv.{displayUser.level}</span>
               </div>
               <p className="text-[11px] text-gray-500 flex items-center gap-1 mt-0.5">
                 <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
-                {userStats.title}
+                {displayUser.title}
               </p>
             </div>
           </div>
@@ -148,12 +172,12 @@ export function Sidebar({ userStats, activeTab, setActiveTab, onUpgradeClick, on
           <div className="mt-3.5 space-y-1">
             <div className="flex items-center justify-between text-[10px] text-gray-500 font-mono">
               <span>XP Progressive</span>
-              <span>{userStats.xp.toLocaleString()} / {userStats.maxXp.toLocaleString()}</span>
+              <span>{displayUser.xp.toLocaleString()} / {displayUser.maxXp.toLocaleString()}</span>
             </div>
             <div className="xp-bar-container">
               <div
                 className="xp-bar-fill"
-                style={{ width: `${(userStats.xp / userStats.maxXp) * 100}%` }}
+                style={{ width: `${(displayUser.xp / displayUser.maxXp) * 100}%` }}
               />
             </div>
           </div>
@@ -161,15 +185,15 @@ export function Sidebar({ userStats, activeTab, setActiveTab, onUpgradeClick, on
           <div className="grid grid-cols-3 gap-1 mt-4 pt-3.5 border-t border-[#1e294b]/20 text-center font-mono stats-grid">
             <div>
               <p className="label">Battles</p>
-              <p className="value">{userStats.battlesWon}</p>
+              <p className="value">{displayUser.battlesWon}</p>
             </div>
             <div>
               <p className="label">Win Rate</p>
-              <p className="value highlight">{userStats.winRate}%</p>
+              <p className="value highlight">{displayUser.winRate}%</p>
             </div>
             <div>
               <p className="label">Rank</p>
-              <p className="value accent">#{userStats.globalRank}</p>
+              <p className="value accent">#{displayUser.globalRank}</p>
             </div>
           </div>
         </div>
